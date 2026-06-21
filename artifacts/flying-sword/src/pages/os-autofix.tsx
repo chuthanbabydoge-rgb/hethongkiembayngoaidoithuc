@@ -24,25 +24,25 @@ export default function OSAutoFix() {
     const id = Date.now().toString();
     const now = new Date().toLocaleTimeString("vi", { hour12: false });
     setLoading(true);
-    addGlobalLog("info", "Auto fix started", "POST /auto-fix");
+    addGlobalLog("info", "Bắt đầu tự sửa lỗi", "POST /auto-fix");
 
-    setRuns((prev) => [{ id, timestamp: now, fixed: [], summary: "Running...", status: "running" }, ...prev]);
+    setRuns((prev) => [{ id, timestamp: now, fixed: [], summary: "Đang chạy...", status: "running" }, ...prev]);
 
     try {
       const data = await api.autoFix();
       const fixed = data.fixed ?? [];
-      const summary = data.summary ?? `Fixed ${fixed.length} issue(s)`;
+      const summary = data.summary ?? `Đã sửa ${fixed.length} vấn đề`;
       setRuns((prev) =>
         prev.map((r) => (r.id === id ? { ...r, fixed, summary, status: "done" } : r))
       );
-      addGlobalLog("success", "Auto fix complete", summary);
+      addGlobalLog("success", "Tự sửa lỗi hoàn tất", summary);
     } catch {
       setRuns((prev) =>
         prev.map((r) =>
-          r.id === id ? { ...r, summary: "Failed — backend unreachable", status: "error" } : r
+          r.id === id ? { ...r, summary: "Thất bại — máy chủ không phản hồi", status: "error" } : r
         )
       );
-      addGlobalLog("error", "Auto fix failed", "localhost:9999 not responding");
+      addGlobalLog("error", "Tự sửa lỗi thất bại", "localhost:9999 không phản hồi");
     } finally {
       setLoading(false);
     }
@@ -52,15 +52,15 @@ export default function OSAutoFix() {
     if (!analyzeError.trim()) return;
     setAnalyzeLoading(true);
     setAnalyzeResult(null);
-    addGlobalLog("info", "Analyzing error", analyzeError.slice(0, 40));
+    addGlobalLog("info", "Đang phân tích lỗi", analyzeError.slice(0, 40));
     try {
       const data = await api.analyzeError(analyzeError);
-      const result = data.analysis ?? (data.suggestions ?? []).join("\n") ?? "No analysis returned";
+      const result = data.analysis ?? (data.suggestions ?? []).join("\n") ?? "Không có kết quả phân tích";
       setAnalyzeResult(result);
-      addGlobalLog("success", "Error analyzed", result.slice(0, 60));
+      addGlobalLog("success", "Phân tích lỗi hoàn tất", result.slice(0, 60));
     } catch {
-      setAnalyzeResult("Analysis failed — backend unreachable");
-      addGlobalLog("error", "Analysis failed", "localhost:9999 not responding");
+      setAnalyzeResult("Phân tích thất bại — máy chủ không phản hồi");
+      addGlobalLog("error", "Phân tích thất bại", "localhost:9999 không phản hồi");
     } finally {
       setAnalyzeLoading(false);
     }
@@ -73,7 +73,7 @@ export default function OSAutoFix() {
           <div className="font-mono text-[10px] tracking-[0.3em] text-muted-foreground uppercase mb-1">FixAgent</div>
           <h1 className="font-display text-2xl text-yellow-400 tracking-widest uppercase flex items-center gap-3">
             <Wrench className="w-6 h-6" />
-            Auto Fix
+            Tự Sửa Lỗi
           </h1>
           <div className="mt-1 w-32 h-px bg-gradient-to-r from-yellow-400 to-transparent" />
         </div>
@@ -84,9 +84,9 @@ export default function OSAutoFix() {
           className="flex items-center gap-2 font-mono text-[10px] tracking-widest px-6 py-3 border border-yellow-500/60 text-yellow-400 hover:bg-yellow-500/10 transition-all uppercase disabled:opacity-40 disabled:cursor-not-allowed"
         >
           {loading ? (
-            <><Loader className="w-4 h-4 animate-spin" /> Fixing...</>
+            <><Loader className="w-4 h-4 animate-spin" /> Đang sửa...</>
           ) : (
-            <><Play className="w-4 h-4" /> Execute Auto Fix</>
+            <><Play className="w-4 h-4" /> Thực Thi Tự Sửa Lỗi</>
           )}
         </button>
       </div>
@@ -94,11 +94,11 @@ export default function OSAutoFix() {
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
         {/* Fix History */}
         <div className="space-y-4">
-          <h3 className="font-mono text-[10px] tracking-widest text-muted-foreground uppercase">Fix History</h3>
+          <h3 className="font-mono text-[10px] tracking-widest text-muted-foreground uppercase">Lịch Sử Sửa Lỗi</h3>
           {runs.length === 0 && (
             <div className="border border-border bg-card p-8 text-center">
               <Wrench className="w-8 h-8 text-muted-foreground/20 mx-auto mb-3" />
-              <p className="font-mono text-xs text-muted-foreground/40">No fix runs yet</p>
+              <p className="font-mono text-xs text-muted-foreground/40">Chưa có lần sửa nào</p>
             </div>
           )}
           <AnimatePresence>
@@ -120,7 +120,7 @@ export default function OSAutoFix() {
                         <AlertTriangle className="w-4 h-4 text-destructive" />
                       )}
                       <span className="font-display text-xs tracking-widest text-foreground uppercase">
-                        Fix Run
+                        Lần Sửa
                       </span>
                     </div>
                     <span className="font-mono text-[9px] text-muted-foreground/40">{run.timestamp}</span>
@@ -151,11 +151,11 @@ export default function OSAutoFix() {
           <Card className="bg-card border-card-border">
             <CardHeader className="p-4 border-b border-border flex flex-row items-center gap-2">
               <Cpu className="w-4 h-4 text-primary" />
-              <span className="font-display text-xs tracking-widest text-primary uppercase">Error Analyzer</span>
+              <span className="font-display text-xs tracking-widest text-primary uppercase">Phân Tích Lỗi</span>
             </CardHeader>
             <CardContent className="p-4 space-y-4">
               <p className="font-mono text-[11px] text-muted-foreground leading-relaxed">
-                Paste an error message and let FixAgent analyze the root cause and suggest fixes.
+                Dán thông báo lỗi để FixAgent phân tích nguyên nhân gốc rễ và đề xuất cách sửa.
               </p>
               <textarea
                 data-testid="input-error-text"
@@ -167,7 +167,7 @@ export default function OSAutoFix() {
               />
               {analyzeResult && (
                 <div className="border border-primary/20 bg-accent/20 p-4">
-                  <div className="font-mono text-[9px] text-primary/60 uppercase tracking-widest mb-2">Analysis</div>
+                  <div className="font-mono text-[9px] text-primary/60 uppercase tracking-widest mb-2">Kết Quả Phân Tích</div>
                   <p className="font-mono text-[11px] text-foreground/70 leading-relaxed whitespace-pre-wrap">{analyzeResult}</p>
                 </div>
               )}
@@ -177,7 +177,7 @@ export default function OSAutoFix() {
                 disabled={analyzeLoading || !analyzeError.trim()}
                 className="w-full flex items-center justify-center gap-2 font-mono text-[10px] tracking-widest py-2.5 border border-primary/50 text-primary hover:bg-accent transition-all uppercase disabled:opacity-40 disabled:cursor-not-allowed"
               >
-                {analyzeLoading ? <><Loader className="w-3.5 h-3.5 animate-spin" /> Analyzing...</> : "Analyze Error"}
+                {analyzeLoading ? <><Loader className="w-3.5 h-3.5 animate-spin" /> Đang phân tích...</> : "Phân Tích Lỗi"}
               </button>
             </CardContent>
           </Card>

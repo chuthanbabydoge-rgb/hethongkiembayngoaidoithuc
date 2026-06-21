@@ -46,10 +46,10 @@ export default function OSSettings() {
     <div className="h-full overflow-auto bg-background p-6 space-y-6">
       <div className="flex items-end justify-between">
         <div>
-          <div className="font-mono text-[10px] tracking-[0.3em] text-muted-foreground uppercase mb-1">System Config</div>
+          <div className="font-mono text-[10px] tracking-[0.3em] text-muted-foreground uppercase mb-1">Cấu Hình Hệ Thống</div>
           <h1 className="font-display text-2xl text-primary tracking-widest uppercase flex items-center gap-3">
             <Settings className="w-6 h-6" />
-            Settings
+            Cài Đặt
           </h1>
           <div className="mt-1 w-28 h-px bg-gradient-to-r from-primary to-transparent" />
         </div>
@@ -60,7 +60,7 @@ export default function OSSettings() {
             className="flex items-center gap-2 font-mono text-[10px] tracking-widest px-4 py-2.5 border border-muted-foreground/20 text-muted-foreground hover:text-primary hover:border-primary/40 transition-all uppercase"
           >
             <RefreshCw className="w-3.5 h-3.5" />
-            Reset
+            Đặt Lại
           </button>
           <button
             data-testid="button-save-settings"
@@ -69,7 +69,7 @@ export default function OSSettings() {
               ${saved ? "border-primary/80 text-primary bg-accent" : "border-primary/50 text-primary hover:bg-accent"}`}
           >
             <Save className="w-3.5 h-3.5" />
-            {saved ? "Saved!" : "Save"}
+            {saved ? "Đã lưu!" : "Lưu"}
           </button>
         </div>
       </div>
@@ -79,10 +79,10 @@ export default function OSSettings() {
         <Card className="bg-card border-card-border">
           <CardHeader className="p-4 border-b border-border flex flex-row items-center gap-2">
             <Server className="w-4 h-4 text-primary" />
-            <span className="font-display text-xs tracking-widest text-primary uppercase">Backend</span>
+            <span className="font-display text-xs tracking-widest text-primary uppercase">Máy Chủ</span>
           </CardHeader>
           <CardContent className="p-4 space-y-4">
-            <Field label="API Base URL">
+            <Field label="URL Máy Chủ API">
               <input
                 data-testid="input-api-base"
                 value={settings.apiBase}
@@ -90,7 +90,7 @@ export default function OSSettings() {
                 className={inputCls}
               />
             </Field>
-            <Field label="Health Poll Interval (seconds)">
+            <Field label="Chu kỳ kiểm tra sức khỏe (giây)">
               <input
                 data-testid="input-poll-interval"
                 type="number"
@@ -99,7 +99,7 @@ export default function OSSettings() {
                 className={inputCls}
               />
             </Field>
-            <Field label="Log Retention (entries)">
+            <Field label="Giữ nhật ký (số mục)">
               <input
                 data-testid="input-log-retention"
                 type="number"
@@ -115,10 +115,10 @@ export default function OSSettings() {
         <Card className="bg-card border-card-border">
           <CardHeader className="p-4 border-b border-border flex flex-row items-center gap-2">
             <Bot className="w-4 h-4 text-primary" />
-            <span className="font-display text-xs tracking-widest text-primary uppercase">Agent Config</span>
+            <span className="font-display text-xs tracking-widest text-primary uppercase">Cấu Hình Tác Nhân</span>
           </CardHeader>
           <CardContent className="p-4 space-y-4">
-            <Field label="Default Model">
+            <Field label="Mô hình mặc định">
               <select
                 data-testid="select-agent-model"
                 value={settings.agentModel}
@@ -130,7 +130,7 @@ export default function OSSettings() {
                 ))}
               </select>
             </Field>
-            <Field label="Max Tokens">
+            <Field label="Số token tối đa">
               <input
                 data-testid="input-max-tokens"
                 type="number"
@@ -146,12 +146,12 @@ export default function OSSettings() {
         <Card className="bg-card border-card-border">
           <CardHeader className="p-4 border-b border-border flex flex-row items-center gap-2">
             <Zap className="w-4 h-4 text-primary" />
-            <span className="font-display text-xs tracking-widest text-primary uppercase">Features</span>
+            <span className="font-display text-xs tracking-widest text-primary uppercase">Tính Năng</span>
           </CardHeader>
           <CardContent className="p-4 space-y-6">
             {[
-              { label: "Auto Fix", desc: "Allow FixAgent to automatically patch detected issues", key: "autoFixEnabled" as const },
-              { label: "Memory", desc: "Persist agent context across sessions via MemoryAgent", key: "memoryEnabled" as const },
+              { label: "Tự Sửa Lỗi", desc: "Cho phép FixAgent tự động vá các lỗi phát hiện được", key: "autoFixEnabled" as const },
+              { label: "Bộ Nhớ", desc: "Lưu trữ ngữ cảnh tác nhân giữa các phiên qua MemoryAgent", key: "memoryEnabled" as const },
             ].map((feature) => (
               <div key={feature.key} className="flex items-start justify-between gap-4">
                 <div>
@@ -178,16 +178,16 @@ export default function OSSettings() {
         <CardContent className="p-4 flex items-center gap-6">
           <div>
             <div className="font-display text-sm text-primary tracking-widest uppercase">飛劍 AI DEV OS</div>
-            <div className="font-mono text-[10px] text-muted-foreground mt-0.5">Phase 1 — Digital Twin · v1.0.0</div>
+            <div className="font-mono text-[10px] text-muted-foreground mt-0.5">Giai đoạn 1 — Bản sao kỹ thuật số · v1.0.0</div>
           </div>
           <div className="h-8 w-px bg-border" />
           <div className="font-mono text-[10px] text-muted-foreground space-y-0.5">
-            <div>Backend: <span className="text-primary">{settings.apiBase}</span></div>
-            <div>Model: <span className="text-primary">{settings.agentModel}</span></div>
+            <div>Máy chủ: <span className="text-primary">{settings.apiBase}</span></div>
+            <div>Mô hình: <span className="text-primary">{settings.agentModel}</span></div>
           </div>
           <div className="h-8 w-px bg-border" />
           <div className="font-mono text-[10px] text-muted-foreground/40 leading-relaxed">
-            Tiên hiệp là cảm hứng. Engineering là phương pháp.<br />
+            Tiên hiệp là cảm hứng. Kỹ thuật là phương pháp.<br />
             AI là bộ não. AR là giao diện.
           </div>
         </CardContent>

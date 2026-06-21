@@ -37,6 +37,12 @@ const STATUS_ICON = {
   error: <XCircle className="w-3 h-3 text-destructive" />,
 };
 
+const STATUS_LABEL: Record<AgentStatus, string> = {
+  active: "hoạt động",
+  idle: "chờ",
+  error: "lỗi",
+};
+
 export default function OSDashboard() {
   const { log, addLog } = useActivityLog();
   const [health, setHealth] = useState<HealthData | null>(null);
@@ -57,16 +63,16 @@ export default function OSDashboard() {
       const data = await api.health();
       setHealth(data);
       setHealthError(false);
-      addLog("info", "Health check OK", data.status);
+      addLog("info", "Kiểm tra hệ thống OK", data.status);
     } catch {
       setHealthError(true);
-      addLog("error", "Health check failed", "Backend unreachable at localhost:9999");
+      addLog("error", "Kiểm tra hệ thống thất bại", "Máy chủ không phản hồi tại localhost:9999");
     }
   }, [addLog]);
 
   const fetchAgents = useCallback(async () => {
     setAgentsLoading(true);
-    addLog("info", "Fetching agents", "GET /agents");
+    addLog("info", "Đang tải tác nhân", "GET /agents");
     try {
       const data = await api.agents();
       const mapped: AgentState[] = AGENT_DEFS.map((def, i) => ({
@@ -75,10 +81,10 @@ export default function OSDashboard() {
         load: Math.round(Math.random() * 80 + 10),
       }));
       setAgents(mapped);
-      addLog("success", "Agents loaded", `${mapped.length} agents online`);
+      addLog("success", "Tải tác nhân xong", `${mapped.length} tác nhân trực tuyến`);
     } catch {
       setAgents(AGENT_DEFS.map((a) => ({ id: a.id, status: "error", load: 0 })));
-      addLog("error", "Failed to load agents", "Check backend connection");
+      addLog("error", "Tải tác nhân thất bại", "Kiểm tra kết nối máy chủ");
     } finally {
       setAgentsLoading(false);
     }
@@ -87,15 +93,15 @@ export default function OSDashboard() {
   const runScan = async () => {
     setScanLoading(true);
     setScanResult(null);
-    addLog("info", "Scanning project", "GET /scan-project");
+    addLog("info", "Đang quét dự án", "GET /scan-project");
     try {
       const data = await api.scanProject();
-      const msg = data.summary ?? `Found ${data.files?.length ?? 0} files`;
+      const msg = data.summary ?? `Tìm thấy ${data.files?.length ?? 0} file`;
       setScanResult(msg);
-      addLog("success", "Scan complete", msg);
+      addLog("success", "Quét hoàn tất", msg);
     } catch {
-      setScanResult("Scan failed — backend unreachable");
-      addLog("error", "Scan failed", "localhost:9999 not responding");
+      setScanResult("Quét thất bại — máy chủ không phản hồi");
+      addLog("error", "Quét thất bại", "localhost:9999 không phản hồi");
     } finally {
       setScanLoading(false);
     }
@@ -104,15 +110,15 @@ export default function OSDashboard() {
   const runTerminal = async () => {
     setTermLoading(true);
     setTermResult(null);
-    addLog("info", "Running terminal", "POST /run-terminal");
+    addLog("info", "Chạy terminal", "POST /run-terminal");
     try {
       const data = await api.runTerminal("ls");
-      const out = data.output ?? data.error ?? "No output";
+      const out = data.output ?? data.error ?? "Không có đầu ra";
       setTermResult(out);
-      addLog("success", "Terminal executed", out.slice(0, 60));
+      addLog("success", "Terminal thực thi xong", out.slice(0, 60));
     } catch {
-      setTermResult("Terminal failed — backend unreachable");
-      addLog("error", "Terminal failed", "localhost:9999 not responding");
+      setTermResult("Terminal thất bại — máy chủ không phản hồi");
+      addLog("error", "Terminal thất bại", "localhost:9999 không phản hồi");
     } finally {
       setTermLoading(false);
     }
@@ -121,15 +127,15 @@ export default function OSDashboard() {
   const runAutoFix = async () => {
     setFixLoading(true);
     setFixResult(null);
-    addLog("info", "Running Auto Fix", "POST /auto-fix");
+    addLog("info", "Đang chạy Tự Sửa Lỗi", "POST /auto-fix");
     try {
       const data = await api.autoFix();
-      const msg = data.summary ?? `Fixed ${data.fixed?.length ?? 0} issues`;
+      const msg = data.summary ?? `Đã sửa ${data.fixed?.length ?? 0} vấn đề`;
       setFixResult(msg);
-      addLog("success", "Auto fix complete", msg);
+      addLog("success", "Tự sửa lỗi hoàn tất", msg);
     } catch {
-      setFixResult("Auto fix failed — backend unreachable");
-      addLog("error", "Auto fix failed", "localhost:9999 not responding");
+      setFixResult("Tự sửa lỗi thất bại — máy chủ không phản hồi");
+      addLog("error", "Tự sửa lỗi thất bại", "localhost:9999 không phản hồi");
     } finally {
       setFixLoading(false);
     }
@@ -148,10 +154,10 @@ export default function OSDashboard() {
       <div className="flex items-center justify-between">
         <div>
           <div className="font-mono text-[10px] tracking-[0.3em] text-muted-foreground uppercase mb-1">
-            AI DEV OS · Phase 1
+            AI DEV OS · Giai đoạn 1
           </div>
           <h1 className="font-display text-2xl text-primary tracking-widest uppercase">
-            System Dashboard
+            Bảng Điều Khiển
           </h1>
           <div className="mt-1 w-40 h-px bg-gradient-to-r from-primary to-transparent" />
         </div>
@@ -160,7 +166,7 @@ export default function OSDashboard() {
             className={`w-2 h-2 rounded-full animate-pulse ${healthError ? "bg-destructive shadow-[0_0_6px_hsl(var(--destructive))]" : "bg-primary shadow-[0_0_6px_hsl(var(--primary))]"}`}
           />
           <span className={`font-mono text-xs tracking-widest uppercase ${healthError ? "text-destructive" : "text-primary"}`}>
-            {healthError ? "Backend Offline" : health ? `v${health.version ?? "1.0"} Online` : "Connecting..."}
+            {healthError ? "Máy chủ ngoại tuyến" : health ? `v${health.version ?? "1.0"} Trực tuyến` : "Đang kết nối..."}
           </span>
         </div>
       </div>
@@ -174,7 +180,7 @@ export default function OSDashboard() {
             <CardHeader className="p-4 pb-2 flex flex-row items-center justify-between">
               <div className="flex items-center gap-2">
                 <Bot className="w-4 h-4 text-primary" />
-                <span className="font-display text-xs tracking-widest text-primary uppercase">Agents</span>
+                <span className="font-display text-xs tracking-widest text-primary uppercase">Tác Nhân</span>
               </div>
               <button
                 data-testid="button-refresh-agents"
@@ -182,7 +188,7 @@ export default function OSDashboard() {
                 disabled={agentsLoading}
                 className="font-mono text-[9px] tracking-widest text-muted-foreground border border-muted-foreground/20 px-2 py-1 hover:text-primary hover:border-primary/40 transition-all uppercase disabled:opacity-40"
               >
-                {agentsLoading ? "Loading..." : "Refresh"}
+                {agentsLoading ? "Đang tải..." : "Làm mới"}
               </button>
             </CardHeader>
             <CardContent className="p-4 pt-2 space-y-3">
@@ -196,7 +202,7 @@ export default function OSDashboard() {
                         <span className="font-mono text-[11px] text-foreground/80">{agent.id}</span>
                         <div className="flex items-center gap-1.5">
                           {STATUS_ICON[agent.status]}
-                          <span className="font-mono text-[9px] text-muted-foreground uppercase">{agent.status}</span>
+                          <span className="font-mono text-[9px] text-muted-foreground uppercase">{STATUS_LABEL[agent.status]}</span>
                         </div>
                       </div>
                       <Progress value={agent.load} className="h-0.5 bg-muted" />
@@ -213,11 +219,11 @@ export default function OSDashboard() {
           <Card className="bg-card border-card-border h-full">
             <CardHeader className="p-4 pb-2 flex flex-row items-center gap-2">
               <Search className="w-4 h-4 text-primary" />
-              <span className="font-display text-xs tracking-widest text-primary uppercase">Project Scanner</span>
+              <span className="font-display text-xs tracking-widest text-primary uppercase">Quét Dự Án</span>
             </CardHeader>
             <CardContent className="p-4 pt-2 space-y-3">
               <p className="font-mono text-[11px] text-muted-foreground leading-relaxed">
-                Scan the entire project codebase for issues, unused code, and optimisation opportunities.
+                Quét toàn bộ mã nguồn để phát hiện lỗi, code thừa và cơ hội tối ưu hóa.
               </p>
               {scanResult && (
                 <div className="border border-primary/20 bg-accent/30 p-3 font-mono text-[11px] text-foreground/80 leading-relaxed">
@@ -230,7 +236,7 @@ export default function OSDashboard() {
                 disabled={scanLoading}
                 className="w-full font-mono text-[10px] tracking-widest py-2.5 border border-primary/50 text-primary hover:bg-accent transition-all uppercase disabled:opacity-40 disabled:cursor-not-allowed"
               >
-                {scanLoading ? "Scanning..." : "Scan Project"}
+                {scanLoading ? "Đang quét..." : "Quét Dự Án"}
               </button>
             </CardContent>
           </Card>
@@ -245,7 +251,7 @@ export default function OSDashboard() {
             </CardHeader>
             <CardContent className="p-4 pt-2 space-y-3">
               <p className="font-mono text-[11px] text-muted-foreground leading-relaxed">
-                Execute commands on the backend runtime environment via AI terminal bridge.
+                Thực thi lệnh trên môi trường backend qua cầu nối terminal AI.
               </p>
               {termResult && (
                 <div className="border border-primary/20 bg-[#030810] p-3 font-mono text-[11px] text-primary/80 leading-relaxed whitespace-pre-wrap max-h-20 overflow-y-auto">
@@ -258,7 +264,7 @@ export default function OSDashboard() {
                 disabled={termLoading}
                 className="w-full font-mono text-[10px] tracking-widest py-2.5 border border-primary/50 text-primary hover:bg-accent transition-all uppercase disabled:opacity-40 disabled:cursor-not-allowed"
               >
-                {termLoading ? "Executing..." : "Run Terminal"}
+                {termLoading ? "Đang thực thi..." : "Chạy Terminal"}
               </button>
             </CardContent>
           </Card>
@@ -269,11 +275,11 @@ export default function OSDashboard() {
           <Card className="bg-card border-card-border h-full">
             <CardHeader className="p-4 pb-2 flex flex-row items-center gap-2">
               <Wrench className="w-4 h-4 text-yellow-400" />
-              <span className="font-display text-xs tracking-widest text-yellow-400 uppercase">Auto Fix</span>
+              <span className="font-display text-xs tracking-widest text-yellow-400 uppercase">Tự Sửa Lỗi</span>
             </CardHeader>
             <CardContent className="p-4 pt-2 space-y-3">
               <p className="font-mono text-[11px] text-muted-foreground leading-relaxed">
-                Let FixAgent automatically detect and patch errors across the entire codebase.
+                Để FixAgent tự động phát hiện và vá lỗi trên toàn bộ mã nguồn.
               </p>
               {fixResult && (
                 <div className="border border-yellow-500/20 bg-yellow-500/5 p-3 font-mono text-[11px] text-yellow-300/80 leading-relaxed">
@@ -286,7 +292,7 @@ export default function OSDashboard() {
                 disabled={fixLoading}
                 className="w-full font-mono text-[10px] tracking-widest py-2.5 border border-yellow-500/50 text-yellow-400 hover:bg-yellow-500/10 transition-all uppercase disabled:opacity-40 disabled:cursor-not-allowed"
               >
-                {fixLoading ? "Fixing..." : "Execute Auto Fix"}
+                {fixLoading ? "Đang sửa..." : "Thực Thi Tự Sửa Lỗi"}
               </button>
             </CardContent>
           </Card>
@@ -297,15 +303,15 @@ export default function OSDashboard() {
           <Card className="bg-card border-card-border h-full">
             <CardHeader className="p-4 pb-2 flex flex-row items-center gap-2">
               <Zap className="w-4 h-4 text-primary" />
-              <span className="font-display text-xs tracking-widest text-primary uppercase">System Status</span>
+              <span className="font-display text-xs tracking-widest text-primary uppercase">Trạng Thái Hệ Thống</span>
             </CardHeader>
             <CardContent className="p-4 pt-2 space-y-4">
               <div className="grid grid-cols-2 gap-3">
                 {[
-                  { label: "Backend", value: healthError ? "Offline" : "Online", ok: !healthError },
-                  { label: "API", value: healthError ? "Error" : "Ready", ok: !healthError },
-                  { label: "Agents", value: `${agents.filter((a) => a.status !== "error").length}/${agents.length}`, ok: true },
-                  { label: "Uptime", value: health?.uptime ? `${Math.floor(health.uptime / 60)}m` : "—", ok: !!health },
+                  { label: "Máy chủ", value: healthError ? "Ngoại tuyến" : "Trực tuyến", ok: !healthError },
+                  { label: "API", value: healthError ? "Lỗi" : "Sẵn sàng", ok: !healthError },
+                  { label: "Tác nhân", value: `${agents.filter((a) => a.status !== "error").length}/${agents.length}`, ok: true },
+                  { label: "Uptime", value: health?.uptime ? `${Math.floor(health.uptime / 60)}p` : "—", ok: !!health },
                 ].map((item) => (
                   <div key={item.label} className="border border-border bg-background/50 p-3">
                     <div className="font-mono text-[9px] text-muted-foreground uppercase tracking-widest mb-1">{item.label}</div>
@@ -320,7 +326,7 @@ export default function OSDashboard() {
                 onClick={fetchHealth}
                 className="w-full font-mono text-[10px] tracking-widest py-2 border border-primary/30 text-muted-foreground hover:text-primary hover:border-primary/60 transition-all uppercase"
               >
-                Refresh Status
+                Làm Mới Trạng Thái
               </button>
             </CardContent>
           </Card>
@@ -332,14 +338,14 @@ export default function OSDashboard() {
             <CardHeader className="p-4 pb-2 flex flex-row items-center justify-between">
               <div className="flex items-center gap-2">
                 <Activity className="w-4 h-4 text-primary" />
-                <span className="font-display text-xs tracking-widest text-primary uppercase">Activity Log</span>
+                <span className="font-display text-xs tracking-widest text-primary uppercase">Nhật Ký Hoạt Động</span>
               </div>
               <div className="w-2 h-2 rounded-full bg-primary animate-pulse shadow-[0_0_6px_hsl(var(--primary))]" />
             </CardHeader>
             <CardContent className="p-4 pt-2">
               <div className="space-y-1.5 max-h-48 overflow-y-auto">
                 {log.length === 0 && (
-                  <p className="font-mono text-[11px] text-muted-foreground/50">No activity yet...</p>
+                  <p className="font-mono text-[11px] text-muted-foreground/50">Chưa có hoạt động nào...</p>
                 )}
                 {log.map((entry, i) => (
                   <div key={i} className="flex gap-2 text-[10px] font-mono">

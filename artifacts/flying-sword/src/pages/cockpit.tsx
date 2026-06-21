@@ -53,7 +53,7 @@ export default function Cockpit() {
         <div className="col-start-1 row-start-1">
           <Card className="bg-background/40 backdrop-blur-md border-primary/30 rounded-none w-fit">
             <CardContent className="p-4 space-y-2">
-              <div className="text-primary font-mono text-xs uppercase tracking-widest opacity-80">System Status</div>
+              <div className="text-primary font-mono text-xs uppercase tracking-widest opacity-80">Trạng Thái Hệ Thống</div>
               <div className="flex items-center gap-3">
                 <div className="w-3 h-3 rounded-full bg-primary shadow-[0_0_10px_theme(colors.primary.DEFAULT)] animate-pulse" />
                 <span className="font-mono text-xl text-primary font-bold uppercase">{flightData.flightMode}</span>
@@ -67,11 +67,11 @@ export default function Cockpit() {
            <Card className="bg-background/40 backdrop-blur-md border-primary/30 rounded-none w-fit text-right">
             <CardContent className="p-4 space-y-4">
               <div>
-                <div className="text-primary/60 font-mono text-xs uppercase tracking-widest">Altitude</div>
+                <div className="text-primary/60 font-mono text-xs uppercase tracking-widest">Độ Cao</div>
                 <div className="font-mono text-3xl text-primary font-bold">{flightData.altitude.toFixed(0)}<span className="text-sm opacity-50 ml-1">M</span></div>
               </div>
               <div>
-                <div className="text-primary/60 font-mono text-xs uppercase tracking-widest">Speed</div>
+                <div className="text-primary/60 font-mono text-xs uppercase tracking-widest">Tốc Độ</div>
                 <div className="font-mono text-3xl text-primary font-bold">{flightData.speed.toFixed(1)}<span className="text-sm opacity-50 ml-1">KM/H</span></div>
               </div>
             </CardContent>
@@ -82,7 +82,7 @@ export default function Cockpit() {
         <div className="col-start-1 row-start-3 self-end">
            <Card className="bg-background/40 backdrop-blur-md border-primary/30 rounded-none">
             <CardContent className="p-4">
-              <div className="text-primary/60 font-mono text-xs uppercase tracking-widest mb-4">Core Output</div>
+              <div className="text-primary/60 font-mono text-xs uppercase tracking-widest mb-4">Công Suất Lõi</div>
               <div className="grid grid-cols-2 gap-4">
                 {Object.entries(flightData.motorStatus).map(([key, val]) => (
                   <div key={key}>
@@ -102,7 +102,7 @@ export default function Cockpit() {
           {flightData.warnings.length > 0 && (
              <Card className="bg-destructive/10 backdrop-blur-md border-destructive/50 rounded-none w-full max-w-sm">
               <CardContent className="p-4">
-                <div className="text-destructive font-mono text-xs uppercase tracking-widest animate-pulse mb-2">Warnings</div>
+                <div className="text-destructive font-mono text-xs uppercase tracking-widest animate-pulse mb-2">Cảnh Báo</div>
                 {flightData.warnings.map((w, i) => (
                   <div key={i} className="text-destructive font-mono text-sm border-l-2 border-destructive pl-2 mb-1">{w}</div>
                 ))}
@@ -112,7 +112,7 @@ export default function Cockpit() {
 
           <Card className="bg-background/40 backdrop-blur-md border-primary/30 rounded-none w-64">
             <CardContent className="p-4 flex items-center justify-between">
-              <div className="text-primary/60 font-mono text-xs uppercase tracking-widest">Energy</div>
+              <div className="text-primary/60 font-mono text-xs uppercase tracking-widest">Năng Lượng</div>
               <div className="flex items-center gap-2">
                 <div className="font-mono text-xl text-primary font-bold">{flightData.battery.toFixed(1)}%</div>
                 <div className="w-16 h-4 border border-primary/50 p-[1px]">

@@ -33,7 +33,7 @@ function Reticle() {
 function CompassBar({ heading }: { heading: number }) {
   const ticks = Array.from({ length: 72 }, (_, i) => i * 5);
   const offset = -((heading % 360) / 360) * 72 * 20;
-  const CARDINALS: Record<number, string> = { 0: "N", 90: "E", 180: "S", 270: "W" };
+  const CARDINALS: Record<number, string> = { 0: "B", 90: "Đ", 180: "N", 270: "T" };
 
   return (
     <div className="relative w-full overflow-hidden">
@@ -100,6 +100,12 @@ function SpeedLadder({ speed }: { speed: number }) {
   );
 }
 
+const MODE_LABELS: Record<string, string> = {
+  manual: "THỦ CÔNG",
+  assisted: "HỖ TRỢ",
+  autonomous: "TỰ ĐỘNG",
+};
+
 export default function HUD() {
   const flightData = useFlightSimulation();
   const [mode, setMode] = useState<"manual" | "assisted" | "autonomous">("autonomous");
@@ -141,7 +147,7 @@ export default function HUD() {
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 rounded-full bg-primary animate-pulse shadow-[0_0_6px_hsl(var(--primary))]" />
-            <span className="font-mono text-[10px] tracking-[0.3em] text-primary uppercase">飛劍 OS · AR HUD v1.0</span>
+            <span className="font-mono text-[10px] tracking-[0.3em] text-primary uppercase">飛劍 OS · HUD Thực Chiến v1.0</span>
           </div>
         </div>
 
@@ -166,7 +172,7 @@ export default function HUD() {
                   : "border-muted-foreground/20 text-muted-foreground/50 hover:border-primary/30"
                 }`}
             >
-              {m}
+              {MODE_LABELS[m]}
             </button>
           ))}
         </div>
@@ -179,7 +185,7 @@ export default function HUD() {
       <div className="absolute left-6 top-1/2 -translate-y-1/2 flex items-center gap-2">
         <AltitudeLadder altitude={flightData.altitude} />
         <div className="flex flex-col items-start gap-1">
-          <div className="font-mono text-[9px] tracking-widest text-primary/50 uppercase">ALT</div>
+          <div className="font-mono text-[9px] tracking-widest text-primary/50 uppercase">ĐỘ CAO</div>
           <div className="font-mono text-[9px] tracking-widest text-muted-foreground/40 uppercase">M</div>
         </div>
       </div>
@@ -187,7 +193,7 @@ export default function HUD() {
       {/* Right: Speed */}
       <div className="absolute right-6 top-1/2 -translate-y-1/2 flex items-center gap-2">
         <div className="flex flex-col items-end gap-1">
-          <div className="font-mono text-[9px] tracking-widest text-primary/50 uppercase">SPD</div>
+          <div className="font-mono text-[9px] tracking-widest text-primary/50 uppercase">TỐC ĐỘ</div>
           <div className="font-mono text-[9px] tracking-widest text-muted-foreground/40 uppercase">KM/H</div>
         </div>
         <SpeedLadder speed={flightData.speed} />
@@ -206,20 +212,20 @@ export default function HUD() {
               {flightData.battery.toFixed(0)}%
             </div>
           </div>
-          <span className="font-mono text-[9px] tracking-widest text-primary/50 uppercase">Energy</span>
+          <span className="font-mono text-[9px] tracking-widest text-primary/50 uppercase">Năng Lượng</span>
         </div>
 
         {/* GPS + Motors */}
         <div className="flex flex-col items-center gap-2">
           <div className="grid grid-cols-3 gap-x-4 gap-y-1 text-center">
-            <div className="text-[9px] font-mono text-muted-foreground/40 uppercase">L</div>
-            <div className="text-[9px] font-mono text-muted-foreground/40 uppercase">F</div>
-            <div className="text-[9px] font-mono text-muted-foreground/40 uppercase">R</div>
+            <div className="text-[9px] font-mono text-muted-foreground/40 uppercase">T</div>
+            <div className="text-[9px] font-mono text-muted-foreground/40 uppercase">T</div>
+            <div className="text-[9px] font-mono text-muted-foreground/40 uppercase">P</div>
             <div className="text-[10px] font-mono text-primary/80">{flightData.motorStatus.left.toFixed(0)}%</div>
             <div className="text-[10px] font-mono text-primary/80">{flightData.motorStatus.front.toFixed(0)}%</div>
             <div className="text-[10px] font-mono text-primary/80">{flightData.motorStatus.right.toFixed(0)}%</div>
           </div>
-          <div className="text-[9px] font-mono tracking-widest text-primary/40 uppercase">Core Output</div>
+          <div className="text-[9px] font-mono tracking-widest text-primary/40 uppercase">Công Suất Lõi</div>
         </div>
 
         {/* GPS Signal */}

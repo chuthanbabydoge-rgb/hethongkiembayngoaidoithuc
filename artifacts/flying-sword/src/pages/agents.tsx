@@ -18,95 +18,95 @@ interface Agent {
 const INITIAL_AGENTS: Agent[] = [
   {
     id: "planner",
-    name: "Planner",
-    role: "Mission Planning",
+    name: "Lập Kế Hoạch",
+    role: "Hoạch Định Nhiệm Vụ",
     status: "active",
-    lastAction: "Route optimization complete — ETA 14 min",
+    lastAction: "Tối ưu hóa tuyến đường hoàn tất — ETA 14 phút",
     cpuUsage: 42,
     memoryUsage: 38,
     activityLog: [
-      { time: "17:24:01", action: "Computed optimal waypoints for current heading" },
-      { time: "17:23:55", action: "Wind compensation applied to flight path" },
-      { time: "17:23:40", action: "Mission objective updated" },
+      { time: "17:24:01", action: "Tính toán điểm tham chiếu tối ưu cho hướng bay hiện tại" },
+      { time: "17:23:55", action: "Áp dụng bù gió vào đường bay" },
+      { time: "17:23:40", action: "Cập nhật mục tiêu nhiệm vụ" },
     ],
   },
   {
     id: "safety",
-    name: "Safety",
-    role: "Hazard Monitoring",
+    name: "An Toàn",
+    role: "Giám Sát Nguy Hiểm",
     status: "active",
-    lastAction: "All systems within safe operating envelope",
+    lastAction: "Tất cả hệ thống trong giới hạn vận hành an toàn",
     cpuUsage: 78,
     memoryUsage: 55,
     activityLog: [
-      { time: "17:24:02", action: "Battery at 92% — nominal" },
-      { time: "17:24:00", action: "Airspace clearance confirmed" },
-      { time: "17:23:48", action: "Motor thermal check — OK" },
+      { time: "17:24:02", action: "Pin 92% — bình thường" },
+      { time: "17:24:00", action: "Xác nhận thông đường không phận" },
+      { time: "17:23:48", action: "Kiểm tra nhiệt động cơ — OK" },
     ],
   },
   {
     id: "navigation",
-    name: "Navigation",
-    role: "Pathfinding",
+    name: "Dẫn Đường",
+    role: "Tìm Đường",
     status: "active",
-    lastAction: "Heading 045° — GPS lock confirmed (8 satellites)",
+    lastAction: "Hướng 045° — GPS đã khóa (8 vệ tinh)",
     cpuUsage: 61,
     memoryUsage: 44,
     activityLog: [
-      { time: "17:24:02", action: "GPS signal strong — 8 satellites locked" },
-      { time: "17:23:52", action: "Recalculating route around restricted zone" },
-      { time: "17:23:41", action: "Altitude hold engaged at 1,200m" },
+      { time: "17:24:02", action: "Tín hiệu GPS mạnh — 8 vệ tinh đã khóa" },
+      { time: "17:23:52", action: "Tính lại tuyến đường vòng quanh vùng hạn chế" },
+      { time: "17:23:41", action: "Giữ độ cao ở mức 1.200m" },
     ],
   },
   {
     id: "vision",
-    name: "Vision",
-    role: "Object Detection",
+    name: "Thị Giác",
+    role: "Phát Hiện Vật Thể",
     status: "idle",
-    lastAction: "Sector clear — no obstacles detected",
+    lastAction: "Khu vực thông thoáng — không phát hiện chướng ngại vật",
     cpuUsage: 29,
     memoryUsage: 67,
     activityLog: [
-      { time: "17:24:00", action: "Obstacle scan: 360° sweep complete, clear" },
-      { time: "17:23:45", action: "Bird flock detected and avoided — 45m right" },
-      { time: "17:23:30", action: "Terrain mapping updated" },
+      { time: "17:24:00", action: "Quét chướng ngại: quét 360° hoàn tất, thông thoáng" },
+      { time: "17:23:45", action: "Phát hiện đàn chim và tránh được — 45m bên phải" },
+      { time: "17:23:30", action: "Cập nhật bản đồ địa hình" },
     ],
   },
   {
     id: "memory",
-    name: "Memory",
-    role: "Flight History",
+    name: "Bộ Nhớ",
+    role: "Lịch Sử Bay",
     status: "idle",
-    lastAction: "Flight log saved — 1,247 data points recorded",
+    lastAction: "Nhật ký bay đã lưu — 1.247 điểm dữ liệu ghi lại",
     cpuUsage: 14,
     memoryUsage: 82,
     activityLog: [
-      { time: "17:24:01", action: "Telemetry snapshot saved to storage" },
-      { time: "17:23:50", action: "Previous flight patterns analyzed" },
-      { time: "17:23:20", action: "Route efficiency score: 94%" },
+      { time: "17:24:01", action: "Ảnh chụp telemetry lưu vào bộ nhớ" },
+      { time: "17:23:50", action: "Phân tích các mẫu bay trước đó" },
+      { time: "17:23:20", action: "Điểm hiệu quả tuyến đường: 94%" },
     ],
   },
   {
     id: "maintenance",
-    name: "Maintenance",
-    role: "Hardware Monitor",
+    name: "Bảo Trì",
+    role: "Giám Sát Phần Cứng",
     status: "warning",
-    lastAction: "Rotor #3 vibration slightly elevated — monitoring",
+    lastAction: "Rung động cánh quạt #3 hơi cao — đang theo dõi",
     cpuUsage: 33,
     memoryUsage: 29,
     activityLog: [
-      { time: "17:24:02", action: "WARN: Rotor #3 vibration 0.8mm — threshold 1.0mm" },
-      { time: "17:23:55", action: "Battery cell temp nominal — 38°C" },
-      { time: "17:23:40", action: "Motor controller bus voltage stable" },
+      { time: "17:24:02", action: "CẢNH BÁO: Rung động cánh quạt #3 là 0.8mm — ngưỡng 1.0mm" },
+      { time: "17:23:55", action: "Nhiệt độ tế bào pin bình thường — 38°C" },
+      { time: "17:23:40", action: "Điện áp bus bộ điều khiển động cơ ổn định" },
     ],
   },
 ];
 
 const STATUS_CONFIG = {
-  active: { color: "bg-primary shadow-[0_0_8px_hsl(var(--primary))]", label: "ACTIVE", badge: "border-primary/50 text-primary" },
-  idle: { color: "bg-muted-foreground/50", label: "IDLE", badge: "border-muted-foreground/30 text-muted-foreground" },
-  warning: { color: "bg-destructive shadow-[0_0_8px_hsl(var(--destructive))]", label: "WARNING", badge: "border-destructive/50 text-destructive" },
-  offline: { color: "bg-muted/50", label: "OFFLINE", badge: "border-muted/30 text-muted-foreground" },
+  active: { color: "bg-primary shadow-[0_0_8px_hsl(var(--primary))]", label: "HOẠT ĐỘNG", badge: "border-primary/50 text-primary" },
+  idle: { color: "bg-muted-foreground/50", label: "CHỜ", badge: "border-muted-foreground/30 text-muted-foreground" },
+  warning: { color: "bg-destructive shadow-[0_0_8px_hsl(var(--destructive))]", label: "CẢNH BÁO", badge: "border-destructive/50 text-destructive" },
+  offline: { color: "bg-muted/50", label: "NGOẠI TUYẾN", badge: "border-muted/30 text-muted-foreground" },
 };
 
 export default function Agents() {
@@ -134,8 +134,8 @@ export default function Agents() {
     <div className="h-full overflow-auto bg-background p-6">
       {/* Header */}
       <div className="mb-6">
-        <div className="font-mono text-[10px] tracking-[0.3em] text-muted-foreground uppercase mb-1">Phase 3</div>
-        <h1 className="font-display text-2xl text-primary tracking-widest uppercase">AI Agent Network</h1>
+        <div className="font-mono text-[10px] tracking-[0.3em] text-muted-foreground uppercase mb-1">Giai đoạn 3</div>
+        <h1 className="font-display text-2xl text-primary tracking-widest uppercase">Mạng Lưới Tác Nhân AI</h1>
         <div className="mt-1 w-32 h-px bg-gradient-to-r from-primary to-transparent" />
       </div>
 
@@ -180,7 +180,7 @@ export default function Agents() {
                       </div>
                       <Progress value={agent.cpuUsage} className="h-1 bg-muted" />
                       <div className="flex justify-between text-[10px] font-mono text-muted-foreground uppercase">
-                        <span>MEM</span>
+                        <span>RAM</span>
                         <span className="text-primary/80">{agent.memoryUsage.toFixed(0)}%</span>
                       </div>
                       <Progress value={agent.memoryUsage} className="h-1 bg-muted" />
@@ -210,13 +210,13 @@ export default function Agents() {
               </CardHeader>
               <CardContent className="p-4 space-y-4">
                 <div>
-                  <div className="text-[10px] font-mono text-muted-foreground uppercase tracking-widest mb-2">Last Action</div>
+                  <div className="text-[10px] font-mono text-muted-foreground uppercase tracking-widest mb-2">Hành Động Cuối</div>
                   <p className="text-sm font-mono text-foreground leading-relaxed border-l-2 border-primary/40 pl-3">
                     {selected.lastAction}
                   </p>
                 </div>
                 <div>
-                  <div className="text-[10px] font-mono text-muted-foreground uppercase tracking-widest mb-3">Activity Log</div>
+                  <div className="text-[10px] font-mono text-muted-foreground uppercase tracking-widest mb-3">Nhật Ký Hoạt Động</div>
                   <div className="space-y-2 max-h-64 overflow-y-auto">
                     {selected.activityLog.map((entry, i) => (
                       <motion.div
@@ -227,7 +227,7 @@ export default function Agents() {
                         className="flex gap-3 text-[11px] font-mono"
                       >
                         <span className="text-primary/50 flex-shrink-0">{entry.time}</span>
-                        <span className={`leading-relaxed ${entry.action.startsWith("WARN") ? "text-destructive" : "text-foreground/70"}`}>
+                        <span className={`leading-relaxed ${entry.action.startsWith("CẢNH BÁO") ? "text-destructive" : "text-foreground/70"}`}>
                           {entry.action}
                         </span>
                       </motion.div>
@@ -235,17 +235,17 @@ export default function Agents() {
                   </div>
                 </div>
                 <div className="pt-2 border-t border-border space-y-3">
-                  <div className="text-[10px] font-mono text-muted-foreground uppercase tracking-widest">Resources</div>
+                  <div className="text-[10px] font-mono text-muted-foreground uppercase tracking-widest">Tài Nguyên</div>
                   <div>
                     <div className="flex justify-between text-[10px] font-mono mb-1 text-muted-foreground uppercase">
-                      <span>CPU Usage</span>
+                      <span>Sử dụng CPU</span>
                       <span className="text-primary">{selected.cpuUsage.toFixed(1)}%</span>
                     </div>
                     <Progress value={selected.cpuUsage} className="h-1.5 bg-muted" />
                   </div>
                   <div>
                     <div className="flex justify-between text-[10px] font-mono mb-1 text-muted-foreground uppercase">
-                      <span>Memory</span>
+                      <span>Bộ nhớ</span>
                       <span className="text-primary">{selected.memoryUsage.toFixed(1)}%</span>
                     </div>
                     <Progress value={selected.memoryUsage} className="h-1.5 bg-muted" />

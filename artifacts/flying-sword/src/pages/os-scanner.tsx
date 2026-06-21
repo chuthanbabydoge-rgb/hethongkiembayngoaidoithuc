@@ -13,6 +13,12 @@ interface ScanResult {
   scannedAt: string;
 }
 
+const ISSUE_TYPE_LABEL: Record<string, string> = {
+  error: "LỖI",
+  warning: "CẢNH BÁO",
+  info: "THÔNG TIN",
+};
+
 export default function OSScanner() {
   const [result, setResult] = useState<ScanResult | null>(null);
   const [loading, setLoading] = useState(false);
@@ -22,7 +28,7 @@ export default function OSScanner() {
     setLoading(true);
     setError(null);
     setResult(null);
-    addGlobalLog("info", "Project scan started", "GET /scan-project");
+    addGlobalLog("info", "Bắt đầu quét dự án", "GET /scan-project");
 
     try {
       const data = await api.scanProject();
@@ -34,14 +40,14 @@ export default function OSScanner() {
           type: i % 3 === 0 ? "error" : i % 2 === 0 ? "warning" : "info",
           message: msg,
         })),
-        summary: data.summary ?? "Scan complete",
+        summary: data.summary ?? "Quét hoàn tất",
         scannedAt: now,
       };
       setResult(synthesized);
-      addGlobalLog("success", "Scan complete", synthesized.summary);
+      addGlobalLog("success", "Quét hoàn tất", synthesized.summary);
     } catch {
-      setError("Backend unreachable — ensure localhost:9999 is running");
-      addGlobalLog("error", "Scan failed", "localhost:9999 not responding");
+      setError("Máy chủ không phản hồi — hãy đảm bảo localhost:9999 đang chạy");
+      addGlobalLog("error", "Quét thất bại", "localhost:9999 không phản hồi");
     } finally {
       setLoading(false);
     }
@@ -57,7 +63,7 @@ export default function OSScanner() {
           <div className="font-mono text-[10px] tracking-[0.3em] text-muted-foreground uppercase mb-1">Vision Agent</div>
           <h1 className="font-display text-2xl text-primary tracking-widest uppercase flex items-center gap-3">
             <Search className="w-6 h-6" />
-            Project Scanner
+            Quét Dự Án
           </h1>
           <div className="mt-1 w-40 h-px bg-gradient-to-r from-primary to-transparent" />
         </div>
@@ -68,9 +74,9 @@ export default function OSScanner() {
           className="flex items-center gap-2 font-mono text-[10px] tracking-widest px-6 py-3 border border-primary/60 text-primary hover:bg-accent transition-all uppercase disabled:opacity-40 disabled:cursor-not-allowed"
         >
           {loading ? (
-            <><Loader className="w-4 h-4 animate-spin" /> Scanning...</>
+            <><Loader className="w-4 h-4 animate-spin" /> Đang quét...</>
           ) : (
-            <><Search className="w-4 h-4" /> Scan Project</>
+            <><Search className="w-4 h-4" /> Quét Dự Án</>
           )}
         </button>
       </div>
@@ -87,8 +93,8 @@ export default function OSScanner() {
           <div className="w-16 h-16 border border-primary/20 flex items-center justify-center mb-4">
             <Search className="w-8 h-8 text-primary/30" />
           </div>
-          <p className="font-mono text-sm text-muted-foreground/50">Click Scan Project to begin</p>
-          <p className="font-mono text-xs text-muted-foreground/30 mt-1">Calls GET /scan-project on the backend</p>
+          <p className="font-mono text-sm text-muted-foreground/50">Nhấn Quét Dự Án để bắt đầu</p>
+          <p className="font-mono text-xs text-muted-foreground/30 mt-1">Gọi GET /scan-project trên máy chủ</p>
         </div>
       )}
 
@@ -97,7 +103,7 @@ export default function OSScanner() {
           <div className="w-16 h-16 border border-primary/30 animate-pulse flex items-center justify-center mb-4">
             <Search className="w-8 h-8 text-primary animate-pulse" />
           </div>
-          <p className="font-mono text-sm text-primary/60 animate-pulse">Scanning project files...</p>
+          <p className="font-mono text-sm text-primary/60 animate-pulse">Đang quét các file dự án...</p>
         </div>
       )}
 
@@ -107,10 +113,10 @@ export default function OSScanner() {
             {/* Summary bar */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               {[
-                { label: "Files Scanned", value: result.files.length, color: "text-primary" },
-                { label: "Errors", value: issueCount("error"), color: "text-destructive" },
-                { label: "Warnings", value: issueCount("warning"), color: "text-yellow-400" },
-                { label: "Info", value: issueCount("info"), color: "text-sky-400" },
+                { label: "File Đã Quét", value: result.files.length, color: "text-primary" },
+                { label: "Lỗi", value: issueCount("error"), color: "text-destructive" },
+                { label: "Cảnh Báo", value: issueCount("warning"), color: "text-yellow-400" },
+                { label: "Thông Tin", value: issueCount("info"), color: "text-sky-400" },
               ].map((stat) => (
                 <Card key={stat.label} className="bg-card border-card-border">
                   <CardContent className="p-4">
@@ -126,14 +132,14 @@ export default function OSScanner() {
               <CardContent className="p-4 flex items-center gap-3">
                 <CheckCircle className="w-4 h-4 text-primary flex-shrink-0" />
                 <span className="font-mono text-xs text-foreground/70">{result.summary}</span>
-                <span className="font-mono text-[9px] text-muted-foreground/40 ml-auto">Scanned at {result.scannedAt}</span>
+                <span className="font-mono text-[9px] text-muted-foreground/40 ml-auto">Quét lúc {result.scannedAt}</span>
               </CardContent>
             </Card>
 
             {/* Issues */}
             {result.issues.length > 0 && (
               <div className="space-y-2">
-                <h3 className="font-mono text-[10px] tracking-widest text-muted-foreground uppercase">Issues Found</h3>
+                <h3 className="font-mono text-[10px] tracking-widest text-muted-foreground uppercase">Vấn Đề Phát Hiện</h3>
                 {result.issues.map((issue, i) => (
                   <motion.div
                     key={i}
@@ -162,7 +168,7 @@ export default function OSScanner() {
                             "border-sky-500/40 text-sky-400"
                           }`}
                         >
-                          {issue.type.toUpperCase()}
+                          {ISSUE_TYPE_LABEL[issue.type]}
                         </Badge>
                       </CardContent>
                     </Card>
@@ -173,7 +179,7 @@ export default function OSScanner() {
 
             {/* Files list */}
             <div className="space-y-2">
-              <h3 className="font-mono text-[10px] tracking-widest text-muted-foreground uppercase">Scanned Files</h3>
+              <h3 className="font-mono text-[10px] tracking-widest text-muted-foreground uppercase">File Đã Quét</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
                 {result.files.map((f, i) => (
                   <div key={i} className="flex items-center gap-2 p-2 border border-border bg-card">

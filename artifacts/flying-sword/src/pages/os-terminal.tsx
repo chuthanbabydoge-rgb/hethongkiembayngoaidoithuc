@@ -12,8 +12,8 @@ interface TermLine {
 
 const BOOT_LINES: TermLine[] = [
   { id: "b0", type: "info", text: "飛劍 AI DEV OS Terminal v1.0" },
-  { id: "b1", type: "info", text: "Connected to backend bridge at localhost:9999" },
-  { id: "b2", type: "info", text: 'Type a command and press Enter or click "Run"' },
+  { id: "b1", type: "info", text: "Đã kết nối tới cầu nối máy chủ tại localhost:9999" },
+  { id: "b2", type: "info", text: 'Nhập lệnh và nhấn Enter hoặc nhấn nút "Chạy"' },
   { id: "b3", type: "info", text: "─".repeat(48) },
 ];
 
@@ -42,17 +42,17 @@ export default function OSTerminal() {
     setHistIdx(-1);
     append({ type: "input", text: `$ ${command}` });
     setLoading(true);
-    addGlobalLog("info", "Terminal command", command);
+    addGlobalLog("info", "Lệnh terminal", command);
 
     try {
       const data = await api.runTerminal(command);
       if (data.output) append({ type: "output", text: data.output });
       if (data.error) append({ type: "error", text: data.error });
-      if (!data.output && !data.error) append({ type: "output", text: "(no output)" });
-      addGlobalLog("success", "Terminal executed", command);
+      if (!data.output && !data.error) append({ type: "output", text: "(không có đầu ra)" });
+      addGlobalLog("success", "Terminal thực thi xong", command);
     } catch {
-      append({ type: "error", text: "Error: Backend unreachable at localhost:9999" });
-      addGlobalLog("error", "Terminal failed", command);
+      append({ type: "error", text: "Lỗi: Máy chủ không phản hồi tại localhost:9999" });
+      addGlobalLog("error", "Terminal thất bại", command);
     } finally {
       setLoading(false);
     }
@@ -81,7 +81,7 @@ export default function OSTerminal() {
       {/* Header */}
       <div className="flex items-center justify-between flex-shrink-0">
         <div>
-          <div className="font-mono text-[10px] tracking-[0.3em] text-muted-foreground uppercase mb-1">AI Terminal Bridge</div>
+          <div className="font-mono text-[10px] tracking-[0.3em] text-muted-foreground uppercase mb-1">Cầu Nối Terminal AI</div>
           <h1 className="font-display text-2xl text-primary tracking-widest uppercase flex items-center gap-3">
             <TermIcon className="w-6 h-6" />
             Terminal
@@ -106,6 +106,7 @@ export default function OSTerminal() {
             data-testid="button-clear-terminal"
             onClick={() => setLines(BOOT_LINES)}
             className="p-2 text-muted-foreground/40 hover:text-destructive transition-all"
+            title="Xóa terminal"
           >
             <Trash2 className="w-4 h-4" />
           </button>
@@ -135,7 +136,7 @@ export default function OSTerminal() {
           ))}
         </AnimatePresence>
         {loading && (
-          <div className="text-primary/50 animate-pulse">Processing...</div>
+          <div className="text-primary/50 animate-pulse">Đang xử lý...</div>
         )}
         <div ref={bottomRef} />
       </div>
@@ -150,7 +151,7 @@ export default function OSTerminal() {
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={onKeyDown}
           disabled={loading}
-          placeholder="Enter command..."
+          placeholder="Nhập lệnh..."
           className="flex-1 bg-transparent px-3 py-3 font-mono text-sm text-primary placeholder:text-primary/20 focus:outline-none disabled:opacity-50"
           autoFocus
         />
@@ -159,6 +160,7 @@ export default function OSTerminal() {
           onClick={() => run()}
           disabled={loading || !input.trim()}
           className="flex-shrink-0 px-4 py-3 text-primary/60 hover:text-primary transition-all disabled:opacity-30"
+          title="Chạy lệnh"
         >
           <Send className="w-4 h-4" />
         </button>

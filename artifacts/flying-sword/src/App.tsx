@@ -23,23 +23,23 @@ const queryClient = new QueryClient();
 
 const NAV_SECTIONS = [
   {
-    label: "AI DEV OS",
+    label: "HỆ ĐIỀU HÀNH AI",
     items: [
-      { path: "/os", label: "Dashboard", icon: "⊞" },
-      { path: "/os/agents", label: "Agents", icon: "⬡" },
-      { path: "/os/memory", label: "Memory", icon: "◎" },
+      { path: "/os", label: "Tổng Quan", icon: "⊞" },
+      { path: "/os/agents", label: "Tác Nhân", icon: "⬡" },
+      { path: "/os/memory", label: "Bộ Nhớ", icon: "◎" },
       { path: "/os/terminal", label: "Terminal", icon: "▶" },
-      { path: "/os/scanner", label: "Scanner", icon: "◈" },
-      { path: "/os/autofix", label: "Auto Fix", icon: "⚙" },
-      { path: "/os/settings", label: "Settings", icon: "≡" },
+      { path: "/os/scanner", label: "Quét Mã", icon: "◈" },
+      { path: "/os/autofix", label: "Tự Sửa Lỗi", icon: "⚙" },
+      { path: "/os/settings", label: "Cài Đặt", icon: "≡" },
     ],
   },
   {
-    label: "FLIGHT SIM",
+    label: "MÔ PHỎNG BAY",
     items: [
-      { path: "/", label: "Cockpit", icon: "⊕" },
-      { path: "/simulation", label: "Simulation", icon: "◆" },
-      { path: "/hud", label: "AR HUD", icon: "◉" },
+      { path: "/", label: "Buồng Lái", icon: "⊕" },
+      { path: "/simulation", label: "Mô Phỏng", icon: "◆" },
+      { path: "/hud", label: "HUD Thực Chiến", icon: "◉" },
     ],
   },
 ];
@@ -134,7 +134,7 @@ function Sidebar() {
         <div className="px-3 py-3 border-t border-sidebar-border flex-shrink-0">
           <div className="flex items-center gap-2">
             <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse shadow-[0_0_4px_hsl(var(--primary))]" />
-            <span className="font-mono text-[9px] text-primary/60 tracking-widest uppercase">Nominal</span>
+            <span className="font-mono text-[9px] text-primary/60 tracking-widest uppercase">Bình thường</span>
             <Clock />
           </div>
         </div>
@@ -153,7 +153,7 @@ function TopBar() {
       <div className="flex items-center gap-3">
         <span className="font-mono text-sm text-primary">{current?.icon ?? "⊞"}</span>
         <div>
-          <span className="font-display text-xs tracking-[0.2em] text-foreground uppercase">{current?.label ?? "Dashboard"}</span>
+          <span className="font-display text-xs tracking-[0.2em] text-foreground uppercase">{current?.label ?? "Tổng Quan"}</span>
         </div>
       </div>
       <div className="flex items-center gap-4">
@@ -163,8 +163,8 @@ function TopBar() {
         </div>
         <div className="h-4 w-px bg-border" />
         <div className="flex items-center gap-2">
-          <span className="font-mono text-[10px] text-muted-foreground/50 hidden sm:block uppercase tracking-widest">System</span>
-          <span className="font-mono text-[10px] text-primary/70 uppercase tracking-widest">Online</span>
+          <span className="font-mono text-[10px] text-muted-foreground/50 hidden sm:block uppercase tracking-widest">Hệ thống</span>
+          <span className="font-mono text-[10px] text-primary/70 uppercase tracking-widest">Trực tuyến</span>
         </div>
         <div className="h-4 w-px bg-border" />
         <Clock />
