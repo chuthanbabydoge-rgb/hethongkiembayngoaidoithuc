@@ -1,0 +1,209 @@
+PROJECT: FLYING SWORD OS
+
+Mục tiêu:
+Nâng cấp giao diện hiện tại từ bản demo thành Flight Operating System chuyên nghiệp theo phong cách Iron Man + Cyberpunk + Tiên Hiệp Công Nghệ.
+
+KHÔNG phá vỡ cấu trúc hiện có.
+KHÔNG xóa page cũ.
+CHỈ nâng cấp UI/UX và thêm tính năng mô phỏng.
+
+====================================================
+
+GIAI ĐOẠN 1
+
+1. DASHBOARD NÂNG CẤP
+
+Nâng cấp trang OS Dashboard thành trung tâm điều khiển.
+
+Thêm các card realtime:
+
+- Power Core
+- Battery
+- Altitude
+- Speed
+- Motor Status
+- GPS Lock
+- Wind Status
+- AI Status
+
+Ví dụ:
+
+Power Core: 92%
+Battery: 87%
+Altitude: 12m
+Speed: 42km/h
+GPS: Connected
+AI: Online
+
+Sử dụng:
+
+- Radix UI
+- Recharts
+- Framer Motion
+
+Thêm hiệu ứng:
+
+- Glow xanh dương
+- Pulse animation
+- Loading animation
+
+====================================================
+
+2. HUD NÂNG CẤP
+
+Thiết kế giao diện giống kính ngắm.
+
+Hiển thị:
+
+- Altitude
+- Speed
+- Compass
+- Battery
+- Direction
+- Warning System
+
+Tạo overlay toàn màn hình.
+
+Phong cách:
+
+Iron Man HUD
+Cyberpunk Flight HUD
+
+====================================================
+
+3. COCKPIT NÂNG CẤP
+
+Tạo bảng điều khiển bay.
+
+Hiển thị:
+
+- Pitch
+- Roll
+- Yaw
+- Motor Temperature
+- Wind Speed
+- Battery Voltage
+- Flight Mode
+
+Thêm đồng hồ dạng gauge.
+
+Sử dụng Recharts.
+
+====================================================
+
+4. SIMULATION NÂNG CẤP
+
+Biến Simulation thành Flight Simulator.
+
+Thêm:
+
+Buttons:
+
+- Take Off
+- Land
+- Ascend
+- Descend
+- Forward
+- Backward
+- Left
+- Right
+- Emergency Stop
+
+Tạo state:
+
+altitude
+speed
+battery
+flightMode
+
+Khi nhấn:
+
+Ascend:
+altitude tăng
+
+Forward:
+speed tăng
+
+Battery giảm từ từ theo thời gian.
+
+====================================================
+
+5. AI AGENTS PAGE
+
+Hiển thị trạng thái:
+
+Planner Agent
+Navigation Agent
+Memory Agent
+Fix Agent
+Scanner Agent
+
+Mỗi Agent có:
+
+- Status
+- Last Task
+- Health
+- CPU Usage
+
+Dùng card animation.
+
+====================================================
+
+6. MEMORY PAGE
+
+Tạo AI Memory Vault.
+
+Hiển thị:
+
+- Missions
+- Flight Logs
+- System Events
+
+Có chức năng:
+
+Search Memory
+
+====================================================
+
+7. SCANNER PAGE
+
+Tạo giao diện radar.
+
+Hiển thị:
+
+- Nearby Objects
+- Signal Strength
+- Threat Level
+
+Có radar animation.
+
+====================================================
+
+8. SETTINGS PAGE
+
+Thêm:
+
+- Dark Mode
+- HUD Opacity
+- Simulation Speed
+- Sound Effects
+- AI Voice
+
+Lưu settings bằng localStorage.
+
+====================================================
+
+YÊU CẦU
+
+- Không tạo project mới.
+- Chỉ sửa project hiện tại.
+- Giữ nguyên routing.
+- Giữ nguyên cấu trúc folder.
+- Tất cả code phải hoạt động.
+- Tất cả page phải responsive.
+- Không để lỗi TypeScript.
+
+Sau khi hoàn thành:
+1. Liệt kê các file đã sửa.
+2. Liệt kê các component mới tạo.
+3. Giải thích cách chạy.

@@ -1,305 +1,372 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 
-interface SimulationScenario {
-  id: string;
-  name: string;
-  type: "wind" | "weight" | "terrain" | "obstacle" | "signal_loss" | "power_loss";
-  description: string;
-  severity: "low" | "medium" | "high";
-  status: "idle" | "running" | "completed";
-  progress: number;
-  aiDecision: string;
-  metric: string;
+type FlightMode = "STANDBY" | "TAKEOFF" | "HOVER" | "FORWARD" | "BACKWARD" | "LEFT" | "RIGHT" | "ASCENDING" | "DESCENDING" | "LANDING" | "EMERGENCY";
+
+interface SimState {
+  altitude: number;
+  speed: number;
+  battery: number;
+  flightMode: FlightMode;
+  heading: number;
+  pitch: number;
+  roll: number;
+  isFlying: boolean;
 }
 
-const SCENARIOS: SimulationScenario[] = [
-  {
-    id: "wind",
-    name: "Gió Bão",
-    type: "wind",
-    description: "Gió ngang đột ngột 80km/h ở độ cao 2.000m",
-    severity: "high",
-    status: "idle",
-    progress: 0,
-    aiDecision: "Chờ bắt đầu mô phỏng",
-    metric: "Lệch tối đa: 0m",
-  },
-  {
-    id: "weight",
-    name: "Quá Tải",
-    type: "weight",
-    description: "Tải trọng vượt công suất định mức 15%",
-    severity: "medium",
-    status: "idle",
-    progress: 0,
-    aiDecision: "Chờ bắt đầu mô phỏng",
-    metric: "Tiêu thụ điện: bình thường",
-  },
-  {
-    id: "terrain",
-    name: "Đèo Núi",
-    type: "terrain",
-    description: "Xuyên qua hẻm núi rộng 500m ở tốc độ 300m/s",
-    severity: "high",
-    status: "idle",
-    progress: 0,
-    aiDecision: "Chờ bắt đầu mô phỏng",
-    metric: "Khoảng hở: N/A",
-  },
-  {
-    id: "obstacle",
-    name: "Đô Thị Dày Đặc",
-    type: "obstacle",
-    description: "Môi trường thành phố dày đặc — 240 chướng ngại/km²",
-    severity: "high",
-    status: "idle",
-    progress: 0,
-    aiDecision: "Chờ bắt đầu mô phỏng",
-    metric: "Va chạm: 0",
-  },
-  {
-    id: "signal_loss",
-    name: "Mất Tín Hiệu",
-    type: "signal_loss",
-    description: "Mất GPS và telemetry trong 90 giây",
-    severity: "medium",
-    status: "idle",
-    progress: 0,
-    aiDecision: "Chờ bắt đầu mô phỏng",
-    metric: "Lệch vị trí: 0m",
-  },
-  {
-    id: "power_loss",
-    name: "Mất Điện",
-    type: "power_loss",
-    description: "Hai động cơ hỏng đồng thời ở độ cao 1.500m",
-    severity: "high",
-    status: "idle",
-    progress: 0,
-    aiDecision: "Chờ bắt đầu mô phỏng",
-    metric: "Tốc độ hạ: 0 m/s",
-  },
-];
-
-const AI_RESPONSES: Record<string, string[]> = {
-  wind: [
-    "Phát hiện gia tốc ngang bất thường...",
-    "Tác nhân An Toàn: Kích hoạt bù yaw khẩn cấp",
-    "Tác nhân Dẫn Đường: Tính lại hướng — điều chỉnh 12°",
-    "Tác nhân Lập Kế Hoạch: Chuyển hướng lên dải cao độ 1.600m ổn định hơn",
-    "Mô phỏng hoàn tất — lệch hướng giới hạn ở 8.3m. THÀNH CÔNG",
-  ],
-  weight: [
-    "Cảm biến tải báo vượt mức +15%...",
-    "Tác nhân Bảo Trì: Tăng công suất động cơ lên 78%",
-    "Tác nhân An Toàn: Tầm bay tối đa giảm — cảnh báo phi công",
-    "Tác nhân Dẫn Đường: Kích hoạt chế độ tiết kiệm pin",
-    "Mô phỏng hoàn tất — bay khả thi. Hiệu suất điện -18%. ĐẠT",
-  ],
-  terrain: [
-    "Tác nhân Thị Giác: Phát hiện tiếp cận hẻm núi — kích hoạt chế độ chính xác",
-    "Tác nhân Dẫn Đường: Tính toán đường bay 3D qua hành lang 500m",
-    "Tác nhân An Toàn: Giám sát lề ngang ở tần số 14Hz",
-    "Tác nhân Lập Kế Hoạch: Giảm tốc độ xuống 45km/h khi qua hành lang",
-    "Mô phỏng hoàn tất — đã qua hẻm núi. Khoảng hở tối thiểu: 12m. THÀNH CÔNG",
-  ],
-  obstacle: [
-    "Tác nhân Thị Giác: Phát hiện môi trường chướng ngại vật dày đặc",
-    "Tất cả tác nhân chuyển sang chế độ tránh né hợp tác...",
-    "Tác nhân Dẫn Đường: Tái lập lộ trình động ở tần số 40Hz",
-    "Tác nhân An Toàn: Duy trì quỹ đạo không va chạm",
-    "Mô phỏng hoàn tất — đi qua 1.2km đô thị. 0 va chạm. HOÀN HẢO",
-  ],
-  signal_loss: [
-    "Mất tín hiệu GPS — chuyển sang dẫn đường quán tính...",
-    "Tác nhân Bộ Nhớ: Khóa vị trí đã biết cuối cùng",
-    "Tác nhân Dẫn Đường: Kích hoạt tính toán đường chết — theo dõi bằng IMU",
-    "Tác nhân An Toàn: Giữ nguyên vị trí chờ khôi phục tín hiệu",
-    "Mô phỏng hoàn tất — sai số vị trí sau 90 giây: 4.2m. BÌNH THƯỜNG",
-  ],
-  power_loss: [
-    "NGHIÊM TRỌNG: Động cơ 2 và 4 ngừng hoạt động",
-    "Tác nhân An Toàn: Khởi động giao thức hạ cánh khẩn cấp",
-    "Tác nhân Dẫn Đường: Vị trí hạ cánh an toàn gần nhất — 340m về phía đông bắc",
-    "Tác nhân Bảo Trì: Phân phối lại tải sang động cơ 1 và 3",
-    "Mô phỏng hoàn tất — hạ cánh khẩn cấp thành công. Mất độ cao: 180m. ĐÃ SỐT",
-  ],
+const INIT_STATE: SimState = {
+  altitude: 0, speed: 0, battery: 100, flightMode: "STANDBY",
+  heading: 0, pitch: 0, roll: 0, isFlying: false,
 };
 
-const SEVERITY_CONFIG = {
-  low: { badge: "border-primary/40 text-primary", bar: "bg-primary/60" },
-  medium: { badge: "border-yellow-500/50 text-yellow-400", bar: "bg-yellow-500" },
-  high: { badge: "border-destructive/60 text-destructive", bar: "bg-destructive" },
+const MODE_COLOR: Record<FlightMode, string> = {
+  STANDBY: "border-muted-foreground/30 text-muted-foreground",
+  TAKEOFF: "border-primary/60 text-primary",
+  HOVER: "border-cyan-400/60 text-cyan-400",
+  FORWARD: "border-primary/60 text-primary",
+  BACKWARD: "border-primary/60 text-primary",
+  LEFT: "border-primary/60 text-primary",
+  RIGHT: "border-primary/60 text-primary",
+  ASCENDING: "border-green-400/60 text-green-400",
+  DESCENDING: "border-yellow-400/60 text-yellow-400",
+  LANDING: "border-yellow-400/60 text-yellow-400",
+  EMERGENCY: "border-destructive/80 text-destructive",
 };
 
-const SEVERITY_LABEL: Record<string, string> = {
-  low: "THẤP",
-  medium: "TRUNG BÌNH",
-  high: "CAO",
-};
+type LogEntry = { time: string; text: string; type: "info" | "warn" | "success" | "error" };
 
-const STATUS_CONFIG = {
-  idle: { label: "CHỜ", badge: "border-muted-foreground/30 text-muted-foreground" },
-  running: { label: "ĐANG CHẠY", badge: "border-primary/50 text-primary" },
-  completed: { label: "HOÀN TẤT", badge: "border-green-500/50 text-green-400" },
-};
+function addTime(): string {
+  const now = new Date();
+  return `${now.getHours().toString().padStart(2, "0")}:${now.getMinutes().toString().padStart(2, "0")}:${now.getSeconds().toString().padStart(2, "0")}`;
+}
 
 export default function Simulation() {
-  const [scenarios, setScenarios] = useState<SimulationScenario[]>(SCENARIOS);
-  const [log, setLog] = useState<{ time: string; text: string; type: "info" | "warn" | "success" }[]>([
-    { time: "17:24:00", text: "Mô phỏng bay kỹ thuật số trực tuyến — 6 kịch bản đã tải", type: "info" },
-    { time: "17:24:00", text: "Các tác nhân AI đang chờ lệnh mô phỏng", type: "info" },
+  const [sim, setSim] = useState<SimState>(INIT_STATE);
+  const [log, setLog] = useState<LogEntry[]>([
+    { time: addTime(), text: "Flight Simulator khởi động thành công", type: "info" },
+    { time: addTime(), text: "Sẵn sàng — nhấn Cất Cánh để bắt đầu", type: "info" },
   ]);
 
-  const runScenario = (id: string) => {
-    const scenario = scenarios.find((s) => s.id === id);
-    if (!scenario || scenario.status === "running") return;
+  const simRef = useRef(sim);
+  simRef.current = sim;
 
-    const responses = AI_RESPONSES[id] || [];
-    let step = 0;
-
-    setScenarios((prev) =>
-      prev.map((s) => (s.id === id ? { ...s, status: "running", progress: 0 } : s))
-    );
-
-    const addLog = (text: string, type: "info" | "warn" | "success" = "info") => {
-      const now = new Date();
-      const time = `${now.getHours().toString().padStart(2, "0")}:${now.getMinutes().toString().padStart(2, "0")}:${now.getSeconds().toString().padStart(2, "0")}`;
-      setLog((prev) => [{ time, text: `[${id.toUpperCase()}] ${text}`, type }, ...prev].slice(0, 40));
-    };
-
-    addLog(`Bắt đầu kịch bản: ${scenario.name}`, "warn");
-
-    const interval = setInterval(() => {
-      step++;
-      const progress = Math.min(100, (step / responses.length) * 100);
-
-      if (step <= responses.length) {
-        const text = responses[step - 1];
-        addLog(text, text.includes("THÀNH CÔNG") || text.includes("ĐẠT") || text.includes("HOÀN HẢO") || text.includes("ĐÃ SỐT") || text.includes("BÌNH THƯỜNG") ? "success" : "info");
-        setScenarios((prev) =>
-          prev.map((s) =>
-            s.id === id
-              ? { ...s, progress, aiDecision: text }
-              : s
-          )
-        );
-      }
-
-      if (step >= responses.length) {
-        clearInterval(interval);
-        setScenarios((prev) =>
-          prev.map((s) => (s.id === id ? { ...s, status: "completed", progress: 100 } : s))
-        );
-      }
-    }, 900);
+  const addLog = (text: string, type: LogEntry["type"] = "info") => {
+    setLog((prev) => [{ time: addTime(), text, type }, ...prev].slice(0, 50));
   };
 
-  const resetAll = () => {
-    setScenarios(SCENARIOS);
-    setLog([{ time: new Date().toLocaleTimeString("vi", { hour12: false }), text: "Đã đặt lại tất cả kịch bản", type: "info" }]);
+  useEffect(() => {
+    const t = setInterval(() => {
+      setSim((prev) => {
+        if (!prev.isFlying && prev.flightMode === "STANDBY") return prev;
+        if (prev.flightMode === "EMERGENCY") return { ...INIT_STATE };
+
+        let { altitude, speed, battery, heading, pitch, roll, isFlying, flightMode } = prev;
+
+        battery = Math.max(0, battery - 0.015);
+        if (battery < 1 && isFlying) { flightMode = "LANDING"; }
+
+        switch (flightMode) {
+          case "TAKEOFF":
+            altitude = Math.min(50, altitude + 1.2);
+            speed = Math.min(20, speed + 0.5);
+            if (altitude >= 50) flightMode = "HOVER";
+            break;
+          case "HOVER":
+            altitude += (Math.random() - 0.5) * 0.3;
+            speed = Math.max(0, speed - 0.3);
+            pitch = pitch * 0.9;
+            roll = roll * 0.9;
+            break;
+          case "ASCENDING":
+            altitude = Math.min(5000, altitude + 2.5);
+            speed = Math.max(0, speed - 0.1);
+            pitch = Math.min(5, pitch + 0.2);
+            break;
+          case "DESCENDING":
+            altitude = Math.max(0, altitude - 2);
+            speed = Math.max(0, speed - 0.1);
+            pitch = Math.max(-5, pitch - 0.2);
+            break;
+          case "FORWARD":
+            speed = Math.min(120, speed + 2);
+            pitch = Math.min(15, pitch + 0.5);
+            altitude += (Math.random() - 0.5) * 0.5;
+            break;
+          case "BACKWARD":
+            speed = Math.max(0, speed - 1.5);
+            pitch = Math.max(-10, pitch - 0.3);
+            break;
+          case "LEFT":
+            heading = (heading - 2 + 360) % 360;
+            roll = Math.max(-20, roll - 0.5);
+            speed = Math.min(60, speed + 0.5);
+            break;
+          case "RIGHT":
+            heading = (heading + 2) % 360;
+            roll = Math.min(20, roll + 0.5);
+            speed = Math.min(60, speed + 0.5);
+            break;
+          case "LANDING":
+            altitude = Math.max(0, altitude - 1);
+            speed = Math.max(0, speed - 0.8);
+            if (altitude <= 0) {
+              return { ...INIT_STATE, battery };
+            }
+            break;
+        }
+        return { altitude, speed, battery, heading, pitch, roll, isFlying, flightMode };
+      });
+    }, 100);
+    return () => clearInterval(t);
+  }, []);
+
+  const cmd = (mode: FlightMode, logMsg: string, type: LogEntry["type"] = "info") => {
+    if (sim.flightMode === "EMERGENCY" && mode !== "EMERGENCY") return;
+    setSim((prev) => ({
+      ...prev,
+      flightMode: mode,
+      isFlying: mode !== "STANDBY" && mode !== "LANDING",
+    }));
+    addLog(logMsg, type);
   };
+
+  const takeOff = () => {
+    if (sim.isFlying) return;
+    setSim((prev) => ({ ...prev, flightMode: "TAKEOFF", isFlying: true, altitude: 0, speed: 0 }));
+    addLog("🚀 Cất cánh — đang leo cao", "success");
+  };
+
+  const land = () => {
+    if (!sim.isFlying) return;
+    cmd("LANDING", "⬇ Bắt đầu hạ cánh — giảm độ cao", "warn");
+  };
+
+  const emergency = () => {
+    setSim({ ...INIT_STATE });
+    addLog("🚨 DỪNG KHẨN CẤP — hệ thống đặt lại", "error");
+  };
+
+  const batteryColor = sim.battery > 40 ? "text-green-400" : sim.battery > 20 ? "text-yellow-400" : "text-destructive";
 
   return (
-    <div className="h-full overflow-auto bg-background p-6">
-      <div className="mb-6 flex items-end justify-between">
+    <div className="h-full overflow-auto bg-background p-6 space-y-4">
+      <div className="flex items-end justify-between">
         <div>
-          <div className="font-mono text-[10px] tracking-[0.3em] text-muted-foreground uppercase mb-1">Giai đoạn 5</div>
+          <div className="font-mono text-[10px] tracking-[0.3em] text-muted-foreground uppercase mb-1">Flight Simulator</div>
           <h1 className="font-display text-2xl text-primary tracking-widest uppercase">Mô Phỏng Bay</h1>
           <div className="mt-1 w-40 h-px bg-gradient-to-r from-primary to-transparent" />
         </div>
-        <button
-          data-testid="button-reset-all"
-          onClick={resetAll}
-          className="font-mono text-[10px] tracking-widest text-muted-foreground border border-muted-foreground/30 px-4 py-2 hover:text-primary hover:border-primary/50 transition-all uppercase"
-        >
-          Đặt Lại Tất Cả
-        </button>
+        <Badge variant="outline" className={`font-mono text-xs tracking-widest ${MODE_COLOR[sim.flightMode]}`}>
+          {sim.flightMode}
+        </Badge>
       </div>
 
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-        {/* Scenarios */}
-        <div className="xl:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {scenarios.map((s, i) => (
-            <motion.div
-              key={s.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.06 }}
-              data-testid={`card-scenario-${s.id}`}
-            >
-              <Card className="bg-card border-card-border hover:border-primary/30 transition-all duration-200">
-                <CardHeader className="p-4 pb-2">
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="font-display text-sm tracking-widest text-foreground uppercase">{s.name}</span>
-                    <div className="flex gap-2">
-                      <Badge variant="outline" className={`text-[9px] font-mono tracking-widest ${SEVERITY_CONFIG[s.severity].badge}`}>
-                        {SEVERITY_LABEL[s.severity]}
-                      </Badge>
-                      <Badge variant="outline" className={`text-[9px] font-mono tracking-widest ${STATUS_CONFIG[s.status].badge}`}>
-                        {STATUS_CONFIG[s.status].label}
-                      </Badge>
-                    </div>
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-5">
+        {/* Controls */}
+        <div className="xl:col-span-1 space-y-4">
+          <Card className="bg-card border-card-border">
+            <CardHeader className="p-4 pb-2">
+              <span className="font-display text-xs tracking-widest text-primary uppercase">Điều Khiển Bay</span>
+            </CardHeader>
+            <CardContent className="p-4 pt-2 space-y-3">
+              {/* Take Off / Land */}
+              <div className="grid grid-cols-2 gap-2">
+                <button
+                  onClick={takeOff}
+                  disabled={sim.isFlying}
+                  className="font-mono text-[10px] tracking-widest py-2.5 border border-green-500/60 text-green-400 hover:bg-green-500/10 disabled:opacity-30 disabled:cursor-not-allowed transition-all uppercase"
+                >
+                  ↑ Cất Cánh
+                </button>
+                <button
+                  onClick={land}
+                  disabled={!sim.isFlying}
+                  className="font-mono text-[10px] tracking-widest py-2.5 border border-yellow-500/60 text-yellow-400 hover:bg-yellow-500/10 disabled:opacity-30 disabled:cursor-not-allowed transition-all uppercase"
+                >
+                  ↓ Hạ Cánh
+                </button>
+              </div>
+
+              {/* Ascend / Descend */}
+              <div className="grid grid-cols-2 gap-2">
+                <button
+                  onClick={() => cmd("ASCENDING", "⬆ Tăng độ cao", "info")}
+                  disabled={!sim.isFlying}
+                  className="font-mono text-[10px] tracking-widest py-2.5 border border-primary/50 text-primary hover:bg-accent disabled:opacity-30 disabled:cursor-not-allowed transition-all uppercase"
+                >
+                  ⬆ Lên Cao
+                </button>
+                <button
+                  onClick={() => cmd("DESCENDING", "⬇ Giảm độ cao", "info")}
+                  disabled={!sim.isFlying}
+                  className="font-mono text-[10px] tracking-widest py-2.5 border border-primary/50 text-primary hover:bg-accent disabled:opacity-30 disabled:cursor-not-allowed transition-all uppercase"
+                >
+                  ⬇ Xuống Thấp
+                </button>
+              </div>
+
+              {/* Directional Pad */}
+              <div className="grid grid-cols-3 gap-2">
+                <div />
+                <button
+                  onClick={() => cmd("FORWARD", "▲ Tiến về phía trước", "info")}
+                  disabled={!sim.isFlying}
+                  className="font-mono text-[10px] tracking-widest py-3 border border-primary/40 text-primary hover:bg-accent disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                >
+                  ▲
+                </button>
+                <div />
+                <button
+                  onClick={() => cmd("LEFT", "◄ Rẽ trái", "info")}
+                  disabled={!sim.isFlying}
+                  className="font-mono text-[10px] tracking-widest py-3 border border-primary/40 text-primary hover:bg-accent disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                >
+                  ◄
+                </button>
+                <button
+                  onClick={() => cmd("HOVER", "◉ Duy trì vị trí", "info")}
+                  disabled={!sim.isFlying}
+                  className="font-mono text-[10px] tracking-widest py-3 border border-cyan-400/50 text-cyan-400 hover:bg-cyan-500/10 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                >
+                  ◉
+                </button>
+                <button
+                  onClick={() => cmd("RIGHT", "► Rẽ phải", "info")}
+                  disabled={!sim.isFlying}
+                  className="font-mono text-[10px] tracking-widest py-3 border border-primary/40 text-primary hover:bg-accent disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                >
+                  ►
+                </button>
+                <div />
+                <button
+                  onClick={() => cmd("BACKWARD", "▼ Lùi về phía sau", "info")}
+                  disabled={!sim.isFlying}
+                  className="font-mono text-[10px] tracking-widest py-3 border border-primary/40 text-primary hover:bg-accent disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                >
+                  ▼
+                </button>
+                <div />
+              </div>
+
+              {/* Emergency Stop */}
+              <button
+                onClick={emergency}
+                className="w-full font-mono text-[10px] tracking-widest py-3 border-2 border-destructive/80 text-destructive hover:bg-destructive/10 transition-all uppercase animate-pulse font-bold"
+              >
+                🚨 Dừng Khẩn Cấp
+              </button>
+            </CardContent>
+          </Card>
+
+          {/* Telemetry */}
+          <Card className="bg-card border-card-border">
+            <CardContent className="p-4 space-y-3">
+              {[
+                { label: "Độ Cao", value: sim.altitude.toFixed(1), unit: "M", pct: (sim.altitude / 5000) * 100 },
+                { label: "Tốc Độ", value: sim.speed.toFixed(1), unit: "KM/H", pct: (sim.speed / 120) * 100 },
+                { label: "Hướng Bay", value: sim.heading.toFixed(0), unit: "°", pct: (sim.heading / 360) * 100 },
+              ].map((item) => (
+                <div key={item.label}>
+                  <div className="flex justify-between font-mono text-[10px] uppercase mb-1">
+                    <span className="text-muted-foreground">{item.label}</span>
+                    <span className="text-primary font-bold">{item.value} <span className="opacity-50">{item.unit}</span></span>
                   </div>
-                  <p className="text-[11px] font-mono text-muted-foreground mt-1">{s.description}</p>
-                </CardHeader>
-                <CardContent className="p-4 pt-1 space-y-3">
-                  <div>
-                    <Progress value={s.progress} className="h-1 bg-muted" />
-                  </div>
-                  <p className="text-[11px] font-mono text-foreground/60 italic line-clamp-2">{s.aiDecision}</p>
-                  <button
-                    data-testid={`button-run-${s.id}`}
-                    onClick={() => runScenario(s.id)}
-                    disabled={s.status === "running"}
-                    className={`w-full font-mono text-[10px] tracking-widest py-2 border transition-all uppercase
-                      ${s.status === "completed"
-                        ? "border-green-500/40 text-green-400 cursor-default"
-                        : s.status === "running"
-                          ? "border-primary/30 text-primary/50 cursor-not-allowed"
-                          : "border-primary/50 text-primary hover:bg-accent cursor-pointer"
-                      }
-                    `}
-                  >
-                    {s.status === "completed" ? "Hoàn Tất" : s.status === "running" ? "Đang chạy..." : "Chạy Mô Phỏng"}
-                  </button>
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
+                  <Progress value={item.pct} className="h-0.5" />
+                </div>
+              ))}
+              <div>
+                <div className="flex justify-between font-mono text-[10px] uppercase mb-1">
+                  <span className="text-muted-foreground">Pin</span>
+                  <span className={`font-bold ${batteryColor}`}>{sim.battery.toFixed(1)}%</span>
+                </div>
+                <Progress value={sim.battery} className="h-1" />
+              </div>
+            </CardContent>
+          </Card>
         </div>
 
-        {/* Activity Log */}
-        <div>
-          <Card className="h-full bg-card border-card-border min-h-[400px]">
-            <CardHeader className="p-4 border-b border-border">
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-primary animate-pulse shadow-[0_0_6px_hsl(var(--primary))]" />
-                <span className="font-display text-xs tracking-widest text-primary uppercase">Nhật Ký Quyết Định AI</span>
-              </div>
+        {/* Attitude Indicator + Log */}
+        <div className="xl:col-span-2 space-y-4">
+          {/* Attitude Visual */}
+          <Card className="bg-card border-card-border">
+            <CardHeader className="p-4 pb-2">
+              <span className="font-display text-xs tracking-widest text-primary uppercase">Chỉ Số Thái Độ Bay</span>
             </CardHeader>
             <CardContent className="p-4">
-              <div className="space-y-2 max-h-[600px] overflow-y-auto">
+              <div className="grid grid-cols-3 gap-4">
+                {[
+                  { label: "Pitch", value: sim.pitch, range: 30 },
+                  { label: "Roll", value: sim.roll, range: 45 },
+                  { label: "Yaw", value: sim.heading, range: 180 },
+                ].map(({ label, value, range }) => (
+                  <div key={label} className="flex flex-col items-center gap-2">
+                    <div className="font-mono text-[9px] tracking-widest text-muted-foreground uppercase">{label}</div>
+                    <div className="relative w-20 h-20">
+                      <svg viewBox="0 0 80 80" className="w-full h-full">
+                        <circle cx="40" cy="40" r="36" fill="none" stroke="hsl(var(--border))" strokeWidth="2" />
+                        <circle cx="40" cy="40" r="36" fill="none" stroke="hsl(var(--primary))" strokeWidth="2"
+                          strokeDasharray={`${Math.abs(value / range) * 113} 226`}
+                          strokeDashoffset="56.5"
+                          style={{ transition: "stroke-dasharray 0.3s ease", opacity: 0.8 }} />
+                        <line x1="40" y1="10" x2="40" y2="20" stroke="hsl(var(--primary))" strokeWidth="2"
+                          style={{ transformOrigin: "40px 40px", transform: `rotate(${(value / range) * 90}deg)`, transition: "transform 0.3s ease" }} />
+                        <circle cx="40" cy="40" r="3" fill="hsl(var(--primary))" />
+                      </svg>
+                    </div>
+                    <div className="font-mono text-sm text-primary font-bold">{value.toFixed(1)}°</div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Motor status bars */}
+              <div className="mt-4 pt-4 border-t border-border">
+                <div className="font-mono text-[9px] tracking-widest text-muted-foreground uppercase mb-3">Công Suất Động Cơ</div>
+                <div className="grid grid-cols-4 gap-3">
+                  {["Trái", "Phải", "Trước", "Sau"].map((motor, i) => {
+                    const pct = sim.isFlying ? 40 + Math.abs(sim.speed) / 3 + (Math.random() * 5) : 0;
+                    return (
+                      <div key={motor} className="flex flex-col items-center gap-1">
+                        <div className="font-mono text-[9px] text-muted-foreground uppercase">{motor}</div>
+                        <div className="w-full h-16 border border-border bg-background/50 relative overflow-hidden">
+                          <motion.div
+                            className="absolute bottom-0 w-full bg-primary/70 shadow-[0_-4px_8px_hsl(var(--primary)/0.3)]"
+                            animate={{ height: `${pct}%` }}
+                            transition={{ duration: 0.3 }}
+                          />
+                        </div>
+                        <div className="font-mono text-[9px] text-primary">{sim.isFlying ? pct.toFixed(0) : 0}%</div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Log */}
+          <Card className="bg-card border-card-border">
+            <CardHeader className="p-4 pb-2 border-b border-border flex flex-row items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-primary animate-pulse shadow-[0_0_6px_hsl(var(--primary))]" />
+                <span className="font-display text-xs tracking-widest text-primary uppercase">Nhật Ký Lệnh</span>
+              </div>
+              <button onClick={() => setLog([])} className="font-mono text-[9px] text-muted-foreground hover:text-primary uppercase tracking-widest transition-all">Xóa</button>
+            </CardHeader>
+            <CardContent className="p-4">
+              <div className="space-y-1.5 max-h-40 overflow-y-auto">
                 <AnimatePresence>
                   {log.map((entry, i) => (
-                    <motion.div
-                      key={i}
-                      initial={{ opacity: 0, x: -8 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      className="flex gap-3 text-[10px] font-mono"
-                    >
+                    <motion.div key={i} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} className="flex gap-3 text-[10px] font-mono">
                       <span className="text-muted-foreground/50 flex-shrink-0">{entry.time}</span>
                       <span className={
                         entry.type === "success" ? "text-green-400" :
-                        entry.type === "warn" ? "text-destructive" :
+                        entry.type === "error" ? "text-destructive" :
+                        entry.type === "warn" ? "text-yellow-400" :
                         "text-foreground/60"
-                      }>
-                        {entry.text}
-                      </span>
+                      }>{entry.text}</span>
                     </motion.div>
                   ))}
                 </AnimatePresence>
