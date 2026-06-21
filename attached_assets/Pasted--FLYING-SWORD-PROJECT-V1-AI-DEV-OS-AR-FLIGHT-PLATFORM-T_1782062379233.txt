@@ -1,0 +1,210 @@
+# FLYING SWORD PROJECT V1
+
+## AI DEV OS + AR FLIGHT PLATFORM
+
+### Tầm nhìn
+
+Tạo một phương tiện bay cá nhân lấy cảm hứng từ "phi kiếm" trong tiên hiệp.
+
+Người dùng đứng trên một nền tảng bay có hình dáng thanh kiếm khổng lồ.
+
+Hệ thống được điều khiển bởi AI DEV OS, kết hợp AI Agent, Computer Vision, AR HUD và Flight Control.
+
+---
+
+# PHASE 1 — DIGITAL TWIN
+
+## Mục tiêu
+
+Tạo mô hình số hoàn chỉnh trước khi nghĩ tới phần cứng.
+
+### Công nghệ
+
+* AI DEV OS
+* React
+* Three.js
+* WebXR
+* Blender
+* Unity
+
+### Kết quả
+
+* Mô hình 3D thanh kiếm
+* Dashboard điều khiển
+* AR HUD
+* Flight Simulation
+
+---
+
+# PHASE 2 — SPATIAL AI COCKPIT
+
+## Mục tiêu
+
+Biến AI DEV OS thành trung tâm điều khiển thiết bị bay.
+
+### Chức năng
+
+* Bản đồ 3D
+* Theo dõi pin
+* Giám sát động cơ
+* Camera AI
+* Voice Command
+* Gesture Control
+
+### Ví dụ
+
+"Activate Hover Mode"
+
+"Return Home"
+
+"Emergency Landing"
+
+---
+
+# PHASE 3 — AI FLIGHT ASSISTANT
+
+## Các Agent
+
+### Planner Agent
+
+Lập kế hoạch hành trình.
+
+### Safety Agent
+
+Giám sát an toàn.
+
+### Navigation Agent
+
+Tìm đường bay.
+
+### Vision Agent
+
+Nhận diện vật cản.
+
+### Memory Agent
+
+Lưu lịch sử chuyến bay.
+
+### Maintenance Agent
+
+Theo dõi tình trạng thiết bị.
+
+---
+
+# PHASE 4 — AR HUD
+
+## Thông tin hiển thị
+
+* Độ cao
+* Tốc độ
+* Hướng bay
+* Pin
+* Cảnh báo nguy hiểm
+* Chế độ tự động
+
+### Thiết bị
+
+* Meta Quest 3
+* Kính AR tương lai
+
+---
+
+# PHASE 5 — DIGITAL FLIGHT SIMULATION
+
+## Mục tiêu
+
+Mô phỏng hàng nghìn giờ bay.
+
+### Mô phỏng
+
+* Gió
+* Trọng lượng
+* Địa hình
+* Vật cản
+* Mất tín hiệu
+* Mất nguồn
+
+### AI
+
+Tự học cách xử lý tình huống.
+
+---
+
+# PHASE 6 — ROBOTICS PLATFORM
+
+## Hệ thống
+
+* IMU
+* GPS
+* Computer Vision
+* Motor Controller
+* Battery Management
+
+### AI DEV OS
+
+Đóng vai trò hệ điều hành trung tâm.
+
+---
+
+# PHASE 7 — AUTONOMOUS SYSTEM
+
+## Chế độ
+
+### Manual
+
+Người điều khiển.
+
+### Assisted
+
+AI hỗ trợ.
+
+### Autonomous
+
+AI điều khiển hoàn toàn.
+
+---
+
+# PHASE 8 — FLYING SWORD VISION
+
+## Mục tiêu dài hạn
+
+Xây dựng hệ sinh thái:
+
+* AI DEV OS
+* Spatial Computing
+* AR HUD
+* Robotics
+* Autonomous Vehicles
+
+Trong đó Flying Sword chỉ là một thiết bị thuộc hệ sinh thái.
+
+---
+
+# ROADMAP ƯU TIÊN
+
+1. Hoàn thiện AI DEV OS
+2. Dashboard điều khiển
+3. Multi-Agent System
+4. Spatial UI
+5. Three.js Workspace
+6. WebXR
+7. AR HUD
+8. Digital Twin
+9. Flight Simulation
+10. Robotics Integration
+
+---
+
+# TRIẾT LÝ DỰ ÁN
+
+Tiên hiệp là cảm hứng.
+
+Engineering là phương pháp.
+
+AI là bộ não.
+
+AR là giao diện.
+
+Spatial Computing là thế giới.
+
+Flying Sword là phương tiện.
