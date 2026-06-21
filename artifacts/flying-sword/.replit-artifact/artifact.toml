@@ -12,10 +12,10 @@ version = "1.0.0"
 [[services]]
 name = "web"
 paths = [ "/" ]
-localPort = 25826
+localPort = 5173
 
 [services.development]
-run = "pnpm --filter @workspace/flying-sword run dev"
+run = "PORT=5173 BASE_PATH=/ pnpm --filter @workspace/flying-sword run dev"
 
 [services.production]
 build = [ "pnpm", "--filter", "@workspace/flying-sword", "run", "build" ]
@@ -27,5 +27,5 @@ from = "/*"
 to = "/index.html"
 
 [services.env]
-PORT = "25826"
+PORT = "5173"
 BASE_PATH = "/"
