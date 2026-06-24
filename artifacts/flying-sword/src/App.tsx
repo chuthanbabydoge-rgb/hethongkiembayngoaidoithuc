@@ -25,10 +25,18 @@ import Missions from "@/pages/missions";
 import AutopilotPage from "@/pages/autopilot";
 import FlightComputer from "@/pages/flight-computer";
 
+// V4 New pages
+import SpatialCommand from "@/pages/spatial-command";
+import WorldMap from "@/pages/world-map";
+import DigitalTwinPage from "@/components/DigitalTwin";
+
 // Components
 import { GlobalAIStatusBar } from "@/components/BackendStatus";
 import { SafetyMonitor } from "@/components/SafetyMonitor";
 import { JarvisPanel } from "@/components/JarvisPanel";
+import { AICommandOrb } from "@/components/AICommandOrb";
+import { SpatialHUD } from "@/components/SpatialHUD";
+import { SystemOverlay } from "@/components/SystemOverlay";
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { retry: 1, staleTime: 5000 } },
@@ -57,6 +65,14 @@ const NAV_SECTIONS = [
       { path: "/flight-computer", label: "Flight Computer", icon: "⊗" },
       { path: "/simulation", label: "Mô Phỏng", icon: "▲" },
       { path: "/hud", label: "HUD Thực Chiến", icon: "⊚" },
+    ],
+  },
+  {
+    label: "KHÔNG GIAN 3D",
+    items: [
+      { path: "/spatial-command", label: "Spatial Command", icon: "◈" },
+      { path: "/world-map", label: "3D World Map", icon: "⊛" },
+      { path: "/digital-twin", label: "Digital Twin", icon: "⊙" },
     ],
   },
 ];
@@ -191,6 +207,9 @@ function Layout({ children }: { children: React.ReactNode }) {
       {/* Global floating components */}
       <SafetyMonitor />
       <JarvisPanel />
+      <AICommandOrb />
+      <SpatialHUD />
+      <SystemOverlay />
     </div>
   );
 }
@@ -216,6 +235,11 @@ function Router() {
         <Route path="/flight-computer" component={FlightComputer} />
         <Route path="/simulation" component={Simulation} />
         <Route path="/hud" component={HUD} />
+
+        {/* V4 Spatial Computing */}
+        <Route path="/spatial-command" component={SpatialCommand} />
+        <Route path="/world-map" component={WorldMap} />
+        <Route path="/digital-twin" component={DigitalTwinPage} />
 
         <Route component={NotFound} />
       </Switch>

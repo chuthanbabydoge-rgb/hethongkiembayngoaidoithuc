@@ -1,0 +1,223 @@
+PROJECT: FLYING SWORD OS V4
+
+MISSION
+
+Transform the current Flight OS into a Spatial Computing System.
+
+The application should feel like:
+
+- Iron Man HUD
+- Apple Vision Pro
+- AR Flight Computer
+- Flying Sword Control Center
+
+Do not create a new project.
+
+Keep all existing pages.
+
+====================================================
+
+1. SPATIAL COMMAND CENTER
+
+Create a new page:
+
+spatial-command.tsx
+
+====================================================
+
+Build a 3D environment using:
+
+- Three.js
+- React Three Fiber
+- Drei
+
+====================================================
+
+Display:
+
+- Flying Sword
+- Energy Core
+- Radar Sphere
+- Mission Nodes
+
+====================================================
+
+Allow:
+
+Mouse Orbit
+Zoom
+Pan
+
+====================================================
+
+2. DIGITAL TWIN
+
+Create:
+
+DigitalTwin.tsx
+
+====================================================
+
+Create a realtime 3D Flying Sword.
+
+Properties:
+
+- Altitude
+- Speed
+- Battery
+- Heading
+
+When simulator values change:
+
+3D model updates live.
+
+====================================================
+
+3. 3D WORLD MAP
+
+Create:
+
+world-map.tsx
+
+====================================================
+
+Show:
+
+Mountains
+Cities
+Mission Markers
+Waypoints
+
+====================================================
+
+Allow:
+
+Select destination
+
+====================================================
+
+4. AI COMMAND ORB
+
+Create floating AI sphere.
+
+====================================================
+
+Displays:
+
+AI Status
+Health
+Mission
+
+Voice pulses when AI speaks.
+
+====================================================
+
+5. FLIGHT PATH VISUALIZER
+
+Display:
+
+Current Position
+Target Position
+Flight Path
+
+Animated path line.
+
+====================================================
+
+6. ADVANCED RADAR
+
+Create 3D radar.
+
+====================================================
+
+Show:
+
+Objects
+Threats
+Mission Targets
+
+Radar sweep animation.
+
+====================================================
+
+7. ENERGY CORE
+
+Create animated energy reactor.
+
+====================================================
+
+Displays:
+
+Power
+Battery
+Heat
+
+Visual effects:
+
+Glow
+Pulse
+Particles
+
+====================================================
+
+8. SPATIAL HUD
+
+Floating panels:
+
+- Altitude
+- Speed
+- Compass
+- Mission
+
+Panels should be draggable.
+
+====================================================
+
+9. SYSTEM OVERLAY
+
+Always visible.
+
+Displays:
+
+AI ONLINE
+AUTOPILOT STATUS
+THREAT LEVEL
+POWER STATUS
+
+====================================================
+
+10. CINEMATIC MODE
+
+Add button:
+
+ENTER CINEMATIC MODE
+
+====================================================
+
+Camera transitions.
+
+Focus on:
+
+Flying Sword
+Energy Core
+Mission Path
+
+====================================================
+
+REQUIREMENTS
+
+- TypeScript clean
+- No build errors
+- Realtime animations
+- Framer Motion
+- React Three Fiber
+- Drei
+
+====================================================
+
+AFTER COMPLETION
+
+1. List all created files.
+2. List all modified files.
+3. List all new routes.
+4. Explain how Digital Twin works.
