@@ -19,7 +19,14 @@ import OSScanner from "@/pages/os-scanner";
 import OSAutoFix from "@/pages/os-autofix";
 import OSSettings from "@/pages/os-settings";
 
-const queryClient = new QueryClient();
+// Components
+import { GlobalAIStatusBar } from "@/components/BackendStatus";
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: { retry: 1, staleTime: 5000 },
+  },
+});
 
 const NAV_SECTIONS = [
   {
@@ -69,7 +76,7 @@ function Sidebar() {
       data-testid="sidebar-nav"
       className={`flex-shrink-0 bg-sidebar border-r border-sidebar-border flex flex-col z-20 transition-all duration-200 ${collapsed ? "w-14" : "w-52"}`}
     >
-      {/* Logo / Top Bar */}
+      {/* Logo */}
       <div className="h-14 flex items-center justify-between px-3 border-b border-sidebar-border flex-shrink-0">
         <div className="flex items-center gap-2.5 min-w-0">
           <div className="w-7 h-7 border border-primary/60 rotate-45 flex items-center justify-center flex-shrink-0 shadow-[0_0_10px_hsl(var(--primary)/0.4)]">
@@ -157,15 +164,8 @@ function TopBar() {
         </div>
       </div>
       <div className="flex items-center gap-4">
-        <div className="hidden sm:flex items-center gap-2">
-          <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse shadow-[0_0_6px_hsl(var(--primary))]" />
-          <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest">AI DEV OS</span>
-        </div>
-        <div className="h-4 w-px bg-border" />
-        <div className="flex items-center gap-2">
-          <span className="font-mono text-[10px] text-muted-foreground/50 hidden sm:block uppercase tracking-widest">Hệ thống</span>
-          <span className="font-mono text-[10px] text-primary/70 uppercase tracking-widest">Trực tuyến</span>
-        </div>
+        {/* Global AI Status Bar — Backend Status, Agent Count, Memory, System Health */}
+        <GlobalAIStatusBar />
         <div className="h-4 w-px bg-border" />
         <Clock />
       </div>

@@ -1,0 +1,165 @@
+PROJECT: FLYING SWORD OS + AI DEV OS
+
+Mục tiêu:
+Kết nối Frontend Flight OS với Backend AI DEV OS.
+
+Không tạo project mới.
+Không thay đổi routing hiện tại.
+Sử dụng API backend đang chạy tại:
+
+http://localhost:9999
+
+====================================================
+
+1. AGENTS PAGE
+
+Kết nối API:
+
+GET /agents
+
+Hiển thị dữ liệu thật từ backend.
+
+Mỗi Agent hiển thị:
+
+- Agent Name
+- Status
+- Result
+- Last Update
+
+Nếu backend offline:
+
+Hiển thị:
+
+SYSTEM OFFLINE
+
+====================================================
+
+2. MEMORY PAGE
+
+Kết nối:
+
+GET /memory
+
+Nếu API chưa tồn tại:
+
+Tạo mock service.
+
+Hiển thị:
+
+- Saved Tasks
+- Mission History
+- AI Decisions
+
+Có Search.
+
+====================================================
+
+3. TERMINAL PAGE
+
+Kết nối:
+
+GET /run-terminal
+
+Hiển thị:
+
+stdout
+stderr
+
+Giao diện terminal thật.
+
+Có nút:
+
+Run Scan
+Refresh
+
+====================================================
+
+4. AUTO FIX PAGE
+
+Kết nối:
+
+GET /auto-fix
+
+Hiển thị:
+
+- Error Found
+- Fix Suggestion
+- Status
+
+Animation loading.
+
+====================================================
+
+5. PROJECT SCANNER
+
+Kết nối:
+
+GET /scan-project
+
+Hiển thị:
+
+- Total Files
+- Directories
+- Project Context
+
+Dạng tree view.
+
+====================================================
+
+6. TASK PLANNER
+
+Kết nối:
+
+GET /plan-task
+
+Hiển thị:
+
+- Goal
+- Steps
+- Progress
+
+====================================================
+
+7. BACKEND STATUS
+
+Tạo component:
+
+BackendStatus.tsx
+
+Kiểm tra:
+
+GET /health
+
+Hiển thị:
+
+● ONLINE
+● OFFLINE
+
+Realtime update mỗi 5 giây.
+
+====================================================
+
+8. GLOBAL AI STATUS BAR
+
+Hiển thị trên toàn bộ ứng dụng:
+
+Backend Status
+Agent Count
+Memory Usage
+System Health
+
+====================================================
+
+YÊU CẦU
+
+- Sử dụng React Query.
+- Có loading state.
+- Có error state.
+- Không lỗi TypeScript.
+- Không phá giao diện hiện tại.
+
+Sau khi hoàn thành:
+
+1. Liệt kê file đã sửa.
+2. Liệt kê component mới.
+3. Liệt kê API đã kết nối.
