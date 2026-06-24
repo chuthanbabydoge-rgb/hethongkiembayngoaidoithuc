@@ -1,6 +1,7 @@
 import { useRef, useState, Suspense } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { WebGLCanvas } from "@/components/WebGLCanvas";
+import { WebGLErrorBoundary } from "@/components/WebGLErrorBoundary";
 import { OrbitControls, Stars, Line, Float, Sparkles, Text } from "@react-three/drei";
 import * as THREE from "three";
 import { motion, AnimatePresence } from "framer-motion";
