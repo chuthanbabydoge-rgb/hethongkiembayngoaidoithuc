@@ -1,0 +1,179 @@
+PROJECT: FLYING SWORD OS V5
+
+MISSION
+
+Transform the Spatial Flight OS into an AR/XR Operating System.
+
+Target devices:
+
+- Meta Quest 3
+- Vision Pro style experience
+- WebXR compatible browsers
+
+Do not remove existing features.
+
+Keep all existing pages.
+
+====================================================
+
+1. WEBXR FOUNDATION
+
+Integrate:
+
+- WebXR
+- XR Session Manager
+- XR Camera
+
+Create:
+
+xr-manager.tsx
+
+====================================================
+
+2. AR HUD MODE
+
+Create:
+
+ar-hud.tsx
+
+When activated:
+
+All HUD elements become floating spatial panels.
+
+Display:
+
+- Speed
+- Altitude
+- Compass
+- Threat Level
+- Mission Marker
+
+====================================================
+
+3. HAND TRACKING
+
+Create:
+
+hand-tracking.tsx
+
+Support:
+
+- Point
+- Grab
+- Select
+- Drag
+
+Allow users to move HUD panels using hand gestures.
+
+====================================================
+
+4. SPATIAL AI ASSISTANT
+
+Create floating AI Orb.
+
+The orb should:
+
+- Follow user
+- React to voice
+- Animate when speaking
+
+====================================================
+
+5. VOICE AI SYSTEM
+
+Integrate:
+
+Speech Recognition
+Speech Synthesis
+
+Commands:
+
+Take Off
+Land
+Scan Area
+Return Home
+Open Cockpit
+Open Radar
+Open Missions
+
+====================================================
+
+6. SPATIAL WINDOWS
+
+All panels become:
+
+- Draggable
+- Resizable
+- Floating
+
+Examples:
+
+Mission Window
+Radar Window
+Cockpit Window
+Memory Window
+
+====================================================
+
+7. AR RADAR
+
+Display radar in real space.
+
+Show:
+
+Threats
+Waypoints
+Mission Targets
+
+====================================================
+
+8. DIGITAL TWIN XR
+
+Flying Sword model exists in AR space.
+
+Can be:
+
+- Rotated
+- Scaled
+- Inspected
+
+====================================================
+
+9. MISSION VISUALIZATION
+
+Display:
+
+3D mission route
+
+Floating arrows
+
+Destination markers
+
+====================================================
+
+10. COMMAND CENTER MODE
+
+User can switch:
+
+Desktop Mode
+Spatial Mode
+XR Mode
+
+====================================================
+
+REQUIREMENTS
+
+- TypeScript
+- React Three Fiber
+- Drei
+- WebXR
+- Framer Motion
+
+====================================================
+
+AFTER COMPLETION
+
+1. List all XR features.
+2. List all new routes.
+3. List all new components.
+4. Explain XR architecture.
