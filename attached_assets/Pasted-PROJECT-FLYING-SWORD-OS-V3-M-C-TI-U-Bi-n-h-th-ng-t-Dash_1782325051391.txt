@@ -1,0 +1,259 @@
+PROJECT: FLYING SWORD OS V3
+
+MỤC TIÊU
+
+Biến hệ thống từ Dashboard thành AI Flight Assistant.
+
+Phong cách:
+
+- Iron Man JARVIS
+- Tiên Hiệp Công Nghệ
+- Spatial Computing
+- Future Flight OS
+
+KHÔNG tạo project mới.
+KHÔNG phá cấu trúc hiện tại.
+
+====================================================
+
+1. AI FLIGHT ASSISTANT
+
+Tạo page mới:
+
+assistant.tsx
+
+Sidebar thêm:
+
+AI Assistant
+
+====================================================
+
+Tạo giao diện chat.
+
+Người dùng nhập:
+
+- Fly to Mountain
+- Return Home
+- Scan Area
+- Activate Combat Mode
+- Activate Hover Mode
+
+====================================================
+
+AI trả lời theo dạng:
+
+Mission Analysis
+
+Distance:
+Battery Required:
+Risk Level:
+Estimated Time:
+
+====================================================
+
+Thêm typing animation.
+
+Thêm AI avatar.
+
+====================================================
+
+2. VOICE CONTROL SYSTEM
+
+Tạo Voice Panel.
+
+Sử dụng:
+
+Web Speech API
+
+Các lệnh:
+
+Take Off
+Land
+Ascend
+Descend
+Forward
+Backward
+Hover
+Emergency Stop
+
+====================================================
+
+Khi nhận lệnh:
+
+Hiển thị:
+
+VOICE COMMAND ACCEPTED
+
+====================================================
+
+3. MISSION CONTROL
+
+Tạo page:
+
+missions.tsx
+
+====================================================
+
+Cho phép tạo mission:
+
+Mission Name
+Destination
+Priority
+
+====================================================
+
+Hiển thị:
+
+Mission Queue
+
+- Pending
+- Active
+- Completed
+
+====================================================
+
+4. AUTOPILOT SYSTEM
+
+Tạo page:
+
+autopilot.tsx
+
+====================================================
+
+Các mode:
+
+Manual
+Assist
+Autopilot
+
+====================================================
+
+Autopilot hiển thị:
+
+Target
+Distance
+ETA
+Battery Prediction
+
+====================================================
+
+5. FLIGHT COMPUTER
+
+Tạo page:
+
+flight-computer.tsx
+
+====================================================
+
+Hiển thị:
+
+Current Speed
+Altitude
+Battery
+Flight Mode
+GPS Status
+
+====================================================
+
+Realtime update bằng state.
+
+====================================================
+
+6. SAFETY SYSTEM
+
+Tạo component:
+
+SafetyMonitor.tsx
+
+====================================================
+
+Giám sát:
+
+Low Battery
+High Speed
+Motor Overheat
+Signal Loss
+
+====================================================
+
+Khi có lỗi:
+
+Hiển thị cảnh báo đỏ.
+
+====================================================
+
+7. AI DECISION ENGINE
+
+Tạo mock AI service.
+
+Ví dụ:
+
+Battery < 20%
+
+AI tự đề xuất:
+
+RETURN HOME
+
+====================================================
+
+Speed quá cao
+
+AI tự đề xuất:
+
+REDUCE SPEED
+
+====================================================
+
+8. JARVIS PANEL
+
+Tạo panel nổi.
+
+Hiển thị:
+
+AI Status
+Mission Status
+Threat Level
+System Health
+
+====================================================
+
+9. HUD UPGRADE
+
+HUD hiển thị:
+
+Target Marker
+Compass
+Radar
+Threat Warning
+Mission Direction
+
+====================================================
+
+10. ACTIVITY TIMELINE
+
+Tạo timeline:
+
+- Voice Commands
+- Missions
+- AI Decisions
+- Warnings
+
+====================================================
+
+YÊU CẦU
+
+- Responsive
+- TypeScript sạch
+- Không lỗi build
+- Dùng React Query
+- Dùng Framer Motion
+- Dùng Radix UI
+
+====================================================
+
+SAU KHI HOÀN THÀNH
+
+1. Liệt kê file mới.
+2. Liệt kê file sửa.
+3. Liệt kê routes mới.
+4. Liệt kê components mới.

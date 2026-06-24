@@ -19,13 +19,19 @@ import OSScanner from "@/pages/os-scanner";
 import OSAutoFix from "@/pages/os-autofix";
 import OSSettings from "@/pages/os-settings";
 
+// V3 New pages
+import Assistant from "@/pages/assistant";
+import Missions from "@/pages/missions";
+import AutopilotPage from "@/pages/autopilot";
+import FlightComputer from "@/pages/flight-computer";
+
 // Components
 import { GlobalAIStatusBar } from "@/components/BackendStatus";
+import { SafetyMonitor } from "@/components/SafetyMonitor";
+import { JarvisPanel } from "@/components/JarvisPanel";
 
 const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: { retry: 1, staleTime: 5000 },
-  },
+  defaultOptions: { queries: { retry: 1, staleTime: 5000 } },
 });
 
 const NAV_SECTIONS = [
@@ -33,7 +39,9 @@ const NAV_SECTIONS = [
     label: "HỆ ĐIỀU HÀNH AI",
     items: [
       { path: "/os", label: "Tổng Quan", icon: "⊞" },
+      { path: "/os/assistant", label: "AI Assistant", icon: "⟁" },
       { path: "/os/agents", label: "Tác Nhân", icon: "⬡" },
+      { path: "/os/missions", label: "Mission Control", icon: "◆" },
       { path: "/os/memory", label: "Bộ Nhớ", icon: "◎" },
       { path: "/os/terminal", label: "Terminal", icon: "▶" },
       { path: "/os/scanner", label: "Quét Mã", icon: "◈" },
@@ -45,8 +53,10 @@ const NAV_SECTIONS = [
     label: "MÔ PHỎNG BAY",
     items: [
       { path: "/", label: "Buồng Lái", icon: "⊕" },
-      { path: "/simulation", label: "Mô Phỏng", icon: "◆" },
-      { path: "/hud", label: "HUD Thực Chiến", icon: "◉" },
+      { path: "/autopilot", label: "Autopilot", icon: "◉" },
+      { path: "/flight-computer", label: "Flight Computer", icon: "⊗" },
+      { path: "/simulation", label: "Mô Phỏng", icon: "▲" },
+      { path: "/hud", label: "HUD Thực Chiến", icon: "⊚" },
     ],
   },
 ];
@@ -56,9 +66,7 @@ function Clock() {
   useEffect(() => {
     const update = () => {
       const now = new Date();
-      setTime(
-        `${now.getHours().toString().padStart(2, "0")}:${now.getMinutes().toString().padStart(2, "0")}:${now.getSeconds().toString().padStart(2, "0")}`
-      );
+      setTime(`${now.getHours().toString().padStart(2, "0")}:${now.getMinutes().toString().padStart(2, "0")}:${now.getSeconds().toString().padStart(2, "0")}`);
     };
     update();
     const t = setInterval(update, 1000);
@@ -85,7 +93,7 @@ function Sidebar() {
           {!collapsed && (
             <div className="min-w-0">
               <div className="font-display text-[11px] tracking-[0.18em] text-primary font-bold truncate">飛劍 OS</div>
-              <div className="font-mono text-[8px] text-muted-foreground/60 tracking-widest uppercase truncate">AI DEV OS v1.0</div>
+              <div className="font-mono text-[8px] text-muted-foreground/60 tracking-widest uppercase truncate">AI FLIGHT OS v3.0</div>
             </div>
           )}
         </div>
@@ -98,7 +106,7 @@ function Sidebar() {
         </button>
       </div>
 
-      {/* Nav sections */}
+      {/* Nav */}
       <nav className="flex-1 overflow-y-auto py-3 space-y-4">
         {NAV_SECTIONS.map((section) => (
           <div key={section.label}>
@@ -136,7 +144,7 @@ function Sidebar() {
         ))}
       </nav>
 
-      {/* Status footer */}
+      {/* Footer */}
       {!collapsed && (
         <div className="px-3 py-3 border-t border-sidebar-border flex-shrink-0">
           <div className="flex items-center gap-2">
@@ -159,12 +167,9 @@ function TopBar() {
     <header className="h-14 flex-shrink-0 border-b border-border flex items-center justify-between px-6 bg-background/80 backdrop-blur-sm z-10">
       <div className="flex items-center gap-3">
         <span className="font-mono text-sm text-primary">{current?.icon ?? "⊞"}</span>
-        <div>
-          <span className="font-display text-xs tracking-[0.2em] text-foreground uppercase">{current?.label ?? "Tổng Quan"}</span>
-        </div>
+        <span className="font-display text-xs tracking-[0.2em] text-foreground uppercase">{current?.label ?? "Tổng Quan"}</span>
       </div>
       <div className="flex items-center gap-4">
-        {/* Global AI Status Bar — Backend Status, Agent Count, Memory, System Health */}
         <GlobalAIStatusBar />
         <div className="h-4 w-px bg-border" />
         <Clock />
@@ -183,6 +188,9 @@ function Layout({ children }: { children: React.ReactNode }) {
           {children}
         </main>
       </div>
+      {/* Global floating components */}
+      <SafetyMonitor />
+      <JarvisPanel />
     </div>
   );
 }
@@ -193,7 +201,9 @@ function Router() {
       <Switch>
         {/* AI DEV OS */}
         <Route path="/os" component={OSDashboard} />
+        <Route path="/os/assistant" component={Assistant} />
         <Route path="/os/agents" component={Agents} />
+        <Route path="/os/missions" component={Missions} />
         <Route path="/os/memory" component={OSMemory} />
         <Route path="/os/terminal" component={OSTerminal} />
         <Route path="/os/scanner" component={OSScanner} />
@@ -202,6 +212,8 @@ function Router() {
 
         {/* Flight Sim */}
         <Route path="/" component={Cockpit} />
+        <Route path="/autopilot" component={AutopilotPage} />
+        <Route path="/flight-computer" component={FlightComputer} />
         <Route path="/simulation" component={Simulation} />
         <Route path="/hud" component={HUD} />
 
