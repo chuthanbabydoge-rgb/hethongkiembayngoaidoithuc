@@ -30,6 +30,9 @@ import SpatialCommand from "@/pages/spatial-command";
 import WorldMap from "@/pages/world-map";
 import DigitalTwinPage from "@/components/DigitalTwin";
 
+// V5 XR Pages
+import XRCommandCenter from "@/pages/xr-command-center";
+
 // Components
 import { GlobalAIStatusBar } from "@/components/BackendStatus";
 import { SafetyMonitor } from "@/components/SafetyMonitor";
@@ -75,6 +78,12 @@ const NAV_SECTIONS = [
       { path: "/digital-twin", label: "Digital Twin", icon: "⊙" },
     ],
   },
+  {
+    label: "AR/XR OS V5",
+    items: [
+      { path: "/xr", label: "XR Command Center", icon: "⟁" },
+    ],
+  },
 ];
 
 function Clock() {
@@ -109,7 +118,7 @@ function Sidebar() {
           {!collapsed && (
             <div className="min-w-0">
               <div className="font-display text-[11px] tracking-[0.18em] text-primary font-bold truncate">飛劍 OS</div>
-              <div className="font-mono text-[8px] text-muted-foreground/60 tracking-widest uppercase truncate">AI FLIGHT OS v3.0</div>
+              <div className="font-mono text-[8px] text-muted-foreground/60 tracking-widest uppercase truncate">AR/XR OS V5.0</div>
             </div>
           )}
         </div>
@@ -240,6 +249,9 @@ function Router() {
         <Route path="/spatial-command" component={SpatialCommand} />
         <Route path="/world-map" component={WorldMap} />
         <Route path="/digital-twin" component={DigitalTwinPage} />
+
+        {/* V5 AR/XR OS */}
+        <Route path="/xr" component={XRCommandCenter} />
 
         <Route component={NotFound} />
       </Switch>
